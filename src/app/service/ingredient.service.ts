@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Ingredient } from '../api/ingredient';
 import { HttpService } from './http.service';
-import { IQuery } from '../common/interface';
+import { IQuery, IReturnData } from '../common/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
 
 @Injectable()
 export class IngredientService {
   constructor(private httpService: HttpService) {}
 
-  async getIngredients(query: IQuery): Promise<Ingredient[]> {
+  async getIngredients(query: IQuery): Promise<IReturnData<Ingredient>> {
     const queryStr = Object.entries(query).map(([key, value]) =>
       value ? `${key}=${value}` : ''
     );

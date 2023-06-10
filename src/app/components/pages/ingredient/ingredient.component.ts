@@ -18,7 +18,9 @@ export class IngredientComponent implements OnInit {
 
   ingredients: Ingredient[] = [];
 
-  ingredient: Ingredient = {};
+  ingredient: Ingredient = {
+    name: '',
+  };
 
   selectedIngredients: Ingredient[] = [];
 
@@ -45,6 +47,12 @@ export class IngredientComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  private resetIngredientForm() {
+    this.ingredient = {
+      name: '',
+    };
+  }
+
   async ngOnInit() {
     await this.reloadTable();
 
@@ -55,7 +63,7 @@ export class IngredientComponent implements OnInit {
   }
 
   openNew() {
-    this.ingredient = {};
+    this.resetIngredientForm();
     this.submitted = false;
     this.ingredientDialog = true;
   }
@@ -105,7 +113,7 @@ export class IngredientComponent implements OnInit {
       detail: 'Ingredient Deleted',
       life: 3000,
     });
-    this.ingredient = {};
+    this.resetIngredientForm();
   }
 
   hideDialog() {
@@ -141,7 +149,7 @@ export class IngredientComponent implements OnInit {
 
       this.ingredients = [...this.ingredients];
       this.ingredientDialog = false;
-      this.ingredient = {};
+      this.resetIngredientForm();
     }
   }
 

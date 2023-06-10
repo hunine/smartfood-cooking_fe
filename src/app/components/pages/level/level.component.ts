@@ -17,7 +17,9 @@ export class LevelComponent implements OnInit {
 
   levels: Level[] = [];
 
-  level: Level = {};
+  level: Level = {
+    name: '',
+  };
 
   selectedLevels: Level[] = [];
 
@@ -42,6 +44,12 @@ export class LevelComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  private resetLevelForm() {
+    this.level = {
+      name: '',
+    };
+  }
+
   async ngOnInit() {
     await this.reloadTable();
 
@@ -52,7 +60,7 @@ export class LevelComponent implements OnInit {
   }
 
   openNew() {
-    this.level = {};
+    this.resetLevelForm();
     this.submitted = false;
     this.levelDialog = true;
   }
@@ -101,7 +109,7 @@ export class LevelComponent implements OnInit {
       detail: 'Level Deleted',
       life: 3000,
     });
-    this.level = {};
+    this.resetLevelForm();
   }
 
   hideDialog() {
@@ -137,7 +145,7 @@ export class LevelComponent implements OnInit {
 
       this.levels = [...this.levels];
       this.levelDialog = false;
-      this.level = {};
+      this.resetLevelForm();
     }
   }
 

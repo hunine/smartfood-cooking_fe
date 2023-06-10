@@ -46,6 +46,22 @@ export class HttpService {
     });
   }
 
+  put(url: string, criteria: any): any {
+    const headers = this.createAuthorizationHeader();
+
+    return new Promise((resolve, reject) => {
+      // this.http.patch(url, criteria, { headers, withCredentials: true })
+      this.http.put(url, criteria)
+        .toPromise()
+        .then(res => {
+          resolve(res);
+        }).catch(err => {
+          reject();
+        });
+    });
+  }
+
+
   patch(url: string, criteria: any): any {
     const headers = this.createAuthorizationHeader();
 

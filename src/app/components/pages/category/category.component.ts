@@ -17,7 +17,9 @@ export class CategoryComponent implements OnInit {
 
   categories: Category[] = [];
 
-  category: Category = {};
+  category: Category = {
+    name: '',
+  };
 
   selectedCategories: Category[] = [];
 
@@ -51,8 +53,14 @@ export class CategoryComponent implements OnInit {
     ];
   }
 
+  private resetCategoryForm() {
+    this.category = {
+      name: '',
+    };
+  }
+
   openNew() {
-    this.category = {};
+    this.resetCategoryForm();
     this.submitted = false;
     this.categoryDialog = true;
   }
@@ -102,7 +110,7 @@ export class CategoryComponent implements OnInit {
       detail: 'Category Deleted',
       life: 3000,
     });
-    this.category = {};
+    this.resetCategoryForm();
   }
 
   hideDialog() {
@@ -138,7 +146,7 @@ export class CategoryComponent implements OnInit {
 
       this.categories = [...this.categories];
       this.categoryDialog = false;
-      this.category = {};
+      this.resetCategoryForm();
     }
   }
 

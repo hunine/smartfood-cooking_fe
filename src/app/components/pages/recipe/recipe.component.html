@@ -95,7 +95,7 @@
       <ng-template pTemplate="content">
         <div class="card">
           <p-steps [model]="steps" [readonly]="false" [activeIndex]="activeIndexStep"
-            (activeIndexChange)="onActiveIndexStepChange($event)"></p-steps>
+            (activeIndexChange)="handleActiveIndexStepChange($event)"></p-steps>
         </div>
 
         <div *ngIf="activeIndexStep === 0" class="card">
@@ -105,7 +105,7 @@
             <label for="name">Name</label>
             <input type="text" pInputText id="name" [(ngModel)]="recipe.name" required autofocus
               [ngClass]="{'ng-invalid ng-dirty' : submitted && !recipe.name}" />
-            <small class="ng-dirty ng-invalid" *ngIf="submitted && !recipe.name">Name is required.</small>
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !recipe.name">Name is required.</small>
           </div>
           <div class="field">
             <label for="description">Description</label>
@@ -115,7 +115,8 @@
           <div class="field">
             <label for="level">Level</label>
             <p-dropdown [options]="levels" [(ngModel)]="recipe.level" optionLabel="name" [filter]="true" filterBy="name"
-              placeholder="Select a Level" appendTo="body">
+              placeholder="Select a Level" appendTo="body"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.level.name === ''}">
               <ng-template pTemplate="selectedItem">
                 <div class="flex align-items-center gap-2" *ngIf="recipe.level">{{ recipe.level.name }}</div>
               </ng-template>
@@ -123,11 +124,14 @@
                 <div class="flex align-items-center gap-2">{{ level.name }}</div>
               </ng-template>
             </p-dropdown>
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.level.name === ''">Level is
+              required.</small>
           </div>
           <div class="field">
             <label for="category">Category</label>
             <p-dropdown [options]="categories" [(ngModel)]="recipe.category" optionLabel="name" [filter]="true"
-              filterBy="name" placeholder="Select a Category" appendTo="body">
+              filterBy="name" placeholder="Select a Category" appendTo="body"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.category.name === ''}">
               <ng-template pTemplate="selectedItem">
                 <div class="flex align-items-center gap-2" *ngIf="recipe.category">{{ recipe.category.name }}</div>
               </ng-template>
@@ -135,11 +139,14 @@
                 <div class="flex align-items-center gap-2">{{ category.name }}</div>
               </ng-template>
             </p-dropdown>
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.category.name === ''">Category is
+              required.</small>
           </div>
           <div class="field">
             <label for="Cuisine">Cuisine</label>
             <p-dropdown [options]="cuisineArray" [(ngModel)]="recipe.cuisine" optionLabel="name" [filter]="true"
-              filterBy="name" placeholder="Select a Cuisine" appendTo="body">
+              filterBy="name" placeholder="Select a Cuisine" appendTo="body"
+              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.cuisine.name === ''}">
               <ng-template pTemplate="selectedItem">
                 <div class="flex align-items-center gap-2" *ngIf="recipe.cuisine">{{ recipe.cuisine.name }}</div>
               </ng-template>
@@ -147,38 +154,79 @@
                 <div class="flex align-items-center gap-2">{{ cuisine.name }}</div>
               </ng-template>
             </p-dropdown>
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.cuisine.name === ''">Cuisine is
+              required.</small>
           </div>
         </div>
-
         <div *ngIf="activeIndexStep === 1" class="card">
-          <div class="p-formgrid grid">
-            <div class="field col md:col-8">
-              <label for="name">Ingredient name</label>
-              <input type="text" pInputText id="name" [(ngModel)]="recipe.quantification && recipe.quantification[0].ingredient.name" required autofocus
-                [ngClass]="{'ng-invalid ng-dirty' : submitted && !recipe.name}" />
-              <small class="ng-dirty ng-invalid" *ngIf="submitted && !recipe.name">Name is required.</small>
+          <ng-template ngFor let-item [ngForOf]="recipe.quantification" let-i="index">
+            <div class="p-formgrid grid">
+              <div class="field col md:col-7">
+                <label for="ingredient-name">Ingredient name</label>
+                <p-dropdown id="ingredient-name" [options]="ingredients" [(ngModel)]="item.ingredient"
+                  optionLabel="name" [filter]="true" filterBy="name" placeholder="Select a Ingredient" appendTo="body"
+                  [ngClass]="{'ng-invalid ng-dirty' : submitted && item.ingredient.name === ''}">
+                  <ng-template pTemplate="selectedItem">
+                    <div class="flex align-items-center gap-2" *ngIf="item.ingredient.name">{{ item.ingredient.name }}
+                    </div>
+                  </ng-template>
+                  <ng-template let-ingredient pTemplate="item">
+                    <div class="flex align-items-center gap-2">{{ ingredient.name }}</div>
+                  </ng-template>
+                </p-dropdown>
+                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.ingredient.name">Ingredient name is
+                  required.</small>
+              </div>
+              <div class="field col md:col-2">
+                <label for="ingredient-value">Value</label>
+                <p-inputNumber [(ngModel)]="item.value" mode="decimal" inputId="ingredient-value" [useGrouping]="false"
+                  [minFractionDigits]="0" [maxFractionDigits]="2"
+                  [ngClass]="{'ng-invalid ng-dirty' : submitted && item.value <= 0}">
+                </p-inputNumber>
+                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && item.value <= 0">Value is greater than
+                  0</small>
+              </div>
+              <div class="field col md:col-2">
+                <label for="ingredient-unit">Unit</label>
+                <input type="text" pInputText id="ingredient-unit" [(ngModel)]="item.unit" required autofocus
+                  [ngClass]="{'ng-invalid ng-dirty' : submitted && !item.unit}" />
+                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.unit">Unit is required.</small>
+              </div>
+              <div *ngIf="i !== 0 || recipe.quantification.length !== 1" class="field col md:col-1 flex"
+                [style]="{ alignItems: 'end' }">
+                <button id="ingredient-delete-{{i}}" pButton pRipple icon="pi pi-trash" class="p-button-danger w-9 h-9"
+                  (click)="handleRemoveIngredientInRecipe(i)"></button>
+              </div>
             </div>
-            <div class="field col md:col-2">
-              <label for="name">Value</label>
-              <p-inputNumber [(ngModel)]="recipe.quantification && recipe.quantification[0].value" mode="decimal" inputId="name" [useGrouping]="false"
-                [ngClass]="{'ng-invalid ng-dirty' : submitted && !recipe.name}">
-              </p-inputNumber>
-
-              <small class="ng-dirty ng-invalid" *ngIf="submitted && !recipe.name">Name is required.</small>
+          </ng-template>
+          <button pButton pRipple label="Add more ingredients" icon="pi pi-plus" class="p-button-outlined"
+            (click)="handleAddMoreIngredients()"></button>
+        </div>
+        <div *ngIf="activeIndexStep === 2" class="card">
+          <ng-template ngFor let-item [ngForOf]="recipe.recipeStep" let-i="index">
+            <div class="p-formgrid grid">
+              <div class="field col md:col-11">
+                <label for="step-name">Step {{ i + 1 }}</label>
+                <textarea id="description" pInputTextarea [(ngModel)]="item.content" required rows="2" cols="20"
+                  [ngClass]="{'ng-invalid ng-dirty' : submitted && !item.content}"></textarea>
+                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.content">Content is
+                  required.</small>
+              </div>
+              <div *ngIf="i !== 0 || recipe.recipeStep.length !== 1" class="field col md:col-1 flex"
+                [style]="{ alignItems: 'end' }">
+                <button id="step-delete-{{i}}" pButton pRipple icon="pi pi-trash" class="p-button-danger w-9 h-9"
+                  (click)="handleRemoveStep(i)" [style]="{ marginBottom: '3px' }"></button>
+              </div>
             </div>
-            <div class="field col md:col-2">
-              <label for="name">Unit</label>
-              <input type="text" pInputText id="name" [(ngModel)]="recipe.quantification && recipe.quantification[0].unit" required autofocus
-                [ngClass]="{'ng-invalid ng-dirty' : submitted && !recipe.name}" />
-              <small class="ng-dirty ng-invalid" *ngIf="submitted && !recipe.name">Name is required.</small>
-            </div>
-          </div>
+          </ng-template>
+          <button pButton pRipple label="Add more steps" icon="pi pi-plus" class="p-button-outlined"
+            (click)="handleAddMoreSteps()"></button>
         </div>
       </ng-template>
 
       <ng-template pTemplate="footer">
         <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveRecipe()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button" (click)="saveRecipe()"></button>
       </ng-template>
     </p-dialog>
 

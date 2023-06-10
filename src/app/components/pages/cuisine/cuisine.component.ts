@@ -17,7 +17,9 @@ export class CuisineComponent implements OnInit {
 
   cuisineArray: Cuisine[] = [];
 
-  cuisine: Cuisine = {};
+  cuisine: Cuisine = {
+    name: '',
+  };
 
   selectedCuisineArray: Cuisine[] = [];
 
@@ -42,6 +44,12 @@ export class CuisineComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  private resetCuisineForm() {
+    this.cuisine = {
+      name: '',
+    };
+  }
+
   async ngOnInit() {
     await this.reloadTable();
 
@@ -52,7 +60,7 @@ export class CuisineComponent implements OnInit {
   }
 
   openNew() {
-    this.cuisine = {};
+    this.resetCuisineForm();
     this.submitted = false;
     this.cuisineDialog = true;
   }
@@ -102,7 +110,7 @@ export class CuisineComponent implements OnInit {
       detail: 'Cuisine Deleted',
       life: 3000,
     });
-    this.cuisine = {};
+    this.resetCuisineForm();
   }
 
   hideDialog() {
@@ -138,7 +146,7 @@ export class CuisineComponent implements OnInit {
 
       this.cuisineArray = [...this.cuisineArray];
       this.cuisineDialog = false;
-      this.cuisine = {};
+      this.resetCuisineForm();
     }
   }
 

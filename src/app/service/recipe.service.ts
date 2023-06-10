@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Recipe } from '../api/recipe';
+import { Recipe, RecipeDto } from '../api/recipe';
 import { HttpService } from './http.service';
 import { IQuery } from '../common/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
@@ -22,13 +22,18 @@ export class RecipeService {
     return this.httpService.get(url);
   }
 
-  async createRecipe(data: Recipe) {
+  async createRecipe(data: RecipeDto) {
     const url = `${ManagementUrlConfig.recipeUrl}`;
     return this.httpService.post(url, data);
   }
 
-  async updateRecipe(data: Recipe): Promise<Recipe> {
+  async updateRecipe(data: RecipeDto, method: string): Promise<Recipe> {
     const url = `${ManagementUrlConfig.recipeUrl}/${data.id}`;
+
+    if (method === 'put') {
+      return this.httpService.put(url, data);
+    }
+
     return this.httpService.patch(url, data);
   }
 
