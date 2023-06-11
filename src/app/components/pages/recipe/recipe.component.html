@@ -176,6 +176,9 @@
                 </p-dropdown>
                 <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.ingredient.name">Ingredient name is
                   required.</small>
+                <small class="p-error ng-dirty ng-invalid"
+                  *ngIf="item.ingredient.id && isDuplicatedIngredient().includes(item.ingredient.id)">Ingredient is
+                  duplicated</small>
               </div>
               <div class="field col md:col-2">
                 <label for="ingredient-value">Value</label>
@@ -192,10 +195,9 @@
                   [ngClass]="{'ng-invalid ng-dirty' : submitted && !item.unit}" />
                 <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.unit">Unit is required.</small>
               </div>
-              <div *ngIf="i !== 0 || recipe.quantification.length !== 1" class="field col md:col-1 flex"
-                [style]="{ alignItems: 'end' }">
+              <div *ngIf="i !== 0 || recipe.quantification.length !== 1" class="field col md:col-1">
                 <button id="ingredient-delete-{{i}}" pButton pRipple icon="pi pi-trash" class="p-button-danger w-9 h-9"
-                  (click)="handleRemoveIngredientInRecipe(i)"></button>
+                  [style]="{ marginTop: '23px' }" (click)="handleRemoveIngredientInRecipe(i)"></button>
               </div>
             </div>
           </ng-template>
@@ -212,10 +214,9 @@
                 <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.content">Content is
                   required.</small>
               </div>
-              <div *ngIf="i !== 0 || recipe.recipeStep.length !== 1" class="field col md:col-1 flex"
-                [style]="{ alignItems: 'end' }">
+              <div *ngIf="i !== 0 || recipe.recipeStep.length !== 1" class="field col md:col-1">
                 <button id="step-delete-{{i}}" pButton pRipple icon="pi pi-trash" class="p-button-danger w-9 h-9"
-                  (click)="handleRemoveStep(i)" [style]="{ marginBottom: '3px' }"></button>
+                  (click)="handleRemoveStep(i)" [style]="{ marginTop: '23px' }"></button>
               </div>
             </div>
           </ng-template>

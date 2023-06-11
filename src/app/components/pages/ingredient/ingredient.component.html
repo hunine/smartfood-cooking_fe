@@ -79,8 +79,8 @@
     <p-dialog [(visible)]="ingredientDialog" [style]="{width: '1000px'}" header="Ingredient Details" [modal]="true"
       class="p-fluid">
       <ng-template pTemplate="content">
-        <img [src]="'assets/demo/images/product/' + ingredient.image" [alt]="ingredient.image" width="150"
-          class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="ingredient.image">
+        <img [src]="'assets/demo/images/product/' + ingredient.media" [alt]="ingredient.media" width="150"
+          class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="ingredient.media">
         <div class="field">
           <label for="name">Name</label>
           <input type="text" pInputText id="name" [(ngModel)]="ingredient.name" required autofocus

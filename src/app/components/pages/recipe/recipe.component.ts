@@ -126,7 +126,9 @@ export class RecipeComponent implements OnInit {
     this.levels = (await this.levelService.getLevels({})).data;
     this.categories = (await this.categoryService.getCategories({})).data;
     this.cuisineArray = (await this.cuisineService.getCuisineArray({})).data;
-    this.ingredients = (await this.ingredientService.getIngredients({})).data;
+    this.ingredients = (
+      await this.ingredientService.getIngredients({})
+    ).data.map((ingredient) => ({ id: ingredient.id, name: ingredient.name }));
 
     this.cols = [
       { field: 'id', header: 'Id' },
@@ -212,7 +214,8 @@ export class RecipeComponent implements OnInit {
       !ValidationHelper.isInputStringValid(this.recipe.category.name, true) ||
       !ValidationHelper.isInputStringValid(this.recipe.cuisine.name, true) ||
       !this.isQuantificationValid() ||
-      !this.isRecipeStepValid()
+      !this.isRecipeStepValid() ||
+      this.isDuplicatedIngredient().length > 0
     ) {
       return;
     }
@@ -300,6 +303,7 @@ export class RecipeComponent implements OnInit {
       )
     );
   }
+
   isRecipeStepValid() {
     return (
       this.recipe.recipeStep &&
@@ -308,6 +312,21 @@ export class RecipeComponent implements OnInit {
         ValidationHelper.isInputStringValid(item.content, true)
       )
     );
+  }
+
+  isDuplicatedIngredient() {
+    const ingredientIds: string[] = this.recipe.quantification.map(
+      (item) => item.ingredient.id
+    ) as string[];
+    const duplicatedIngredientIds: string[] = [];
+
+    ingredientIds.forEach((item, index) => {
+      if (ingredientIds.indexOf(item) !== index) {
+        duplicatedIngredientIds.push(item);
+      }
+    });
+
+    return duplicatedIngredientIds;
   }
 
   // Handle
