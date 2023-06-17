@@ -3,6 +3,7 @@ import { Category } from 'src/app/api/category';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { CategoryService } from 'src/app/service/category.service';
+import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
 
 @Component({
   templateUrl: './category.component.html',
@@ -31,12 +32,10 @@ export class CategoryComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  itemsPerPage: number = 50;
-
+  // Pagination
+  itemsPerPage: number = 10;
   totalPages: number = 0;
-
-  totalRecords: number = 0;
-
+  totalItems: number = 0;
   currentPage: number = 0;
 
   constructor(
@@ -160,8 +159,23 @@ export class CategoryComponent implements OnInit {
       limit: this.itemsPerPage,
     });
     this.categories = returnData.data as Category[];
-    this.totalPages = returnData.totalPages;
-    this.currentPage = returnData.currentPage;
-    this.totalRecords = returnData.totalItems;
+
+    const { currentPage, totalPages, totalItems, itemsPerPage } =
+      returnData.meta;
+
+    this.totalPages = totalPages;
+    this.currentPage = currentPage;
+    this.totalItems = totalItems;
+    this.itemsPerPage = itemsPerPage;
+  }
+
+  // Handle
+
+  async handlePageChange(event: IEventPaginator) {
+    const returnData: any = await this.categoryService.getCategories({
+      page: event.page + 1 || 1,
+      limit: this.itemsPerPage,
+    });
+    this.categories = returnData.data as Category[];
   }
 }

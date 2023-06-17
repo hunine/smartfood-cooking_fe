@@ -20,10 +20,8 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="levels" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
-        [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedLevels"
+      <p-table #dt [value]="levels" [columns]="cols" responsiveLayout="scroll"
+        [globalFilterFields]="['name','country.name','representative.name','status']" [(selection)]="selectedLevels"
         selectionMode="multiple" [rowHover]="true" dataKey="id">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -68,6 +66,8 @@
           </tr>
         </ng-template>
       </p-table>
+      <p-paginator (onPageChange)="handlePageChange($event)" [first]="currentPage" [rows]="itemsPerPage"
+        [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="levelDialog" [style]="{width: '450px'}" header="Level Details" [modal]="true"

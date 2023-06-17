@@ -3,6 +3,7 @@ import { Ingredient } from 'src/app/api/ingredient';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { IngredientService } from 'src/app/service/ingredient.service';
+import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
 
 @Component({
   templateUrl: './ingredient.component.html',
@@ -34,12 +35,10 @@ export class IngredientComponent implements OnInit {
 
   uploadedFiles: any[] = [];
 
-  itemsPerPage: number = 1000;
-
+  // Pagination
+  itemsPerPage: number = 10;
   totalPages: number = 0;
-
-  totalRecords: number = 0;
-
+  totalItems: number = 0;
   currentPage: number = 0;
 
   constructor(
@@ -163,9 +162,14 @@ export class IngredientComponent implements OnInit {
       limit: this.itemsPerPage,
     });
     this.ingredients = returnData.data as Ingredient[];
-    this.totalPages = returnData.totalPages;
-    this.currentPage = returnData.currentPage;
-    this.totalRecords = returnData.totalItems;
+
+    const { currentPage, totalPages, totalItems, itemsPerPage } =
+      returnData.meta;
+
+      this.totalPages = totalPages;
+      this.currentPage = currentPage;
+      this.totalItems = totalItems;
+      this.itemsPerPage = itemsPerPage;
   }
 
   onUpload(event: any) {
@@ -178,5 +182,14 @@ export class IngredientComponent implements OnInit {
       summary: 'Success',
       detail: 'File Uploaded',
     });
+  }
+
+  // Handle
+  async handlePageChange(event: IEventPaginator) {
+    const returnData: any = await this.ingredientService.getIngredients({
+      page: event.page + 1 || 1,
+      limit: this.itemsPerPage,
+    });
+    this.ingredients = returnData.data as Ingredient[];
   }
 }

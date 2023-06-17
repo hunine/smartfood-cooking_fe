@@ -21,10 +21,8 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="ingredients" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
-        [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      <p-table #dt [value]="ingredients" [columns]="cols" responsiveLayout="scroll"
+        [globalFilterFields]="['name','country.name','representative.name','status']"
         [(selection)]="selectedIngredients" selectionMode="multiple" [rowHover]="true" dataKey="id">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
@@ -74,6 +72,7 @@
           </tr>
         </ng-template>
       </p-table>
+      <p-paginator (onPageChange)="handlePageChange($event)" [first]="currentPage" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="ingredientDialog" [style]="{width: '1000px'}" header="Ingredient Details" [modal]="true"

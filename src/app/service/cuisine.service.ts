@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IQuery, IReturnData } from '../common/interface';
+import { IQuery, IReturnData } from '../common/interfaces/interface';
 import { Cuisine } from '../api/cuisine';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
 import { HttpService } from './http.service';

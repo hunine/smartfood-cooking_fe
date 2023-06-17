@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Recipe, RecipeDto } from '../api/recipe';
 import { HttpService } from './http.service';
-import { IQuery } from '../common/interface';
+import { IQuery } from '../common/interfaces/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
 
 @Injectable()

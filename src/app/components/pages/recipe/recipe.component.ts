@@ -18,6 +18,7 @@ import { CategoryService } from 'src/app/service/category.service';
 import { CuisineService } from 'src/app/service/cuisine.service';
 import ValidationHelper from 'src/app/helper/validation';
 import { IngredientService } from 'src/app/service/ingredient.service';
+import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
 
 @Component({
   templateUrl: './recipe.component.html',
@@ -50,10 +51,13 @@ export class RecipeComponent implements OnInit {
   rowsPerPageOptions = [5, 10, 20];
   uploadedFiles: any[] = [];
 
+  // Filter
+  globalFilter: string = '';
+
   // Pagination
-  itemsPerPage: number = 1000;
+  itemsPerPage: number = 10;
   totalPages: number = 0;
-  totalRecords: number = 0;
+  totalItems: number = 0;
   currentPage: number = 0;
 
   // List
@@ -275,9 +279,13 @@ export class RecipeComponent implements OnInit {
     });
     this.recipes = returnData.data as Recipe[];
 
-    this.totalPages = returnData.totalPages;
-    this.currentPage = returnData.currentPage;
-    this.totalRecords = returnData.totalItems;
+    const { currentPage, totalPages, totalItems, itemsPerPage } =
+      returnData.meta;
+
+    this.totalPages = totalPages;
+    this.currentPage = currentPage;
+    this.totalItems = totalItems;
+    this.itemsPerPage = itemsPerPage;
   }
 
   onUpload(event: any) {
@@ -374,5 +382,25 @@ export class RecipeComponent implements OnInit {
     if (this.recipe.recipeStep && this.recipe.recipeStep.length > 1) {
       this.recipe.recipeStep.splice(index, 1);
     }
+  }
+
+  async handlePageChange(event: IEventPaginator) {
+    const returnData: any = await this.recipeService.getRecipes({
+      page: event.page + 1 || 1,
+      limit: this.itemsPerPage,
+    });
+    this.recipes = returnData.data as Recipe[];
+  }
+
+  async handleTableFilter(event: any) {
+    this.globalFilter = event.filters.global.value;
+
+    console.log(this.globalFilter);
+
+    // const returnData: any = await this.recipeService.getRecipes({
+    //   page: event.page + 1 || 1,
+    //   limit: this.itemsPerPage,
+    // });
+    // this.recipes = returnData.data as Recipe[];
   }
 }

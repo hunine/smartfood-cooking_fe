@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Level } from '../api/level';
 import { HttpService } from './http.service';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
-import { IQuery, IReturnData } from '../common/interface';
+import { IQuery, IReturnData } from '../common/interfaces/interface';
 
 @Injectable()
 export class LevelService {
