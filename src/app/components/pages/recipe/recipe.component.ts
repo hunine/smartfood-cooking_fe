@@ -18,7 +18,8 @@ import { CategoryService } from 'src/app/service/category.service';
 import { CuisineService } from 'src/app/service/cuisine.service';
 import ValidationHelper from 'src/app/helper/validation';
 import { IngredientService } from 'src/app/service/ingredient.service';
-import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
+import { SORT_ORDER } from 'src/app/common/constants/sort-order';
+import { IQuery } from 'src/app/common/interfaces/interface';
 
 @Component({
   templateUrl: './recipe.component.html',
@@ -47,18 +48,17 @@ export class RecipeComponent implements OnInit {
   selectedRecipes: Recipe[] = [];
   submitted: boolean = false;
   cols: any[] = [];
-  statuses: any[] = [];
-  rowsPerPageOptions = [5, 10, 20];
   uploadedFiles: any[] = [];
+  params: IQuery = {};
 
   // Filter
-  globalFilter: string = '';
+  searchInput: string = '';
 
   // Pagination
   itemsPerPage: number = 10;
   totalPages: number = 0;
   totalItems: number = 0;
-  currentPage: number = 0;
+  currentRecords: number = 0;
 
   // List
   levels: Level[] = [];
@@ -273,19 +273,12 @@ export class RecipeComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.recipeService.getRecipes({
-      page: this.currentPage || 1,
-      limit: this.itemsPerPage,
-    });
-    this.recipes = returnData.data as Recipe[];
-
-    const { currentPage, totalPages, totalItems, itemsPerPage } =
-      returnData.meta;
+    const returnData: any = await this.recipeService.getRecipes(this.params);
+    const { totalPages, totalItems } = returnData.meta;
 
     this.totalPages = totalPages;
-    this.currentPage = currentPage;
     this.totalItems = totalItems;
-    this.itemsPerPage = itemsPerPage;
+    this.recipes = returnData.data as Recipe[];
   }
 
   onUpload(event: any) {
@@ -384,23 +377,44 @@ export class RecipeComponent implements OnInit {
     }
   }
 
-  async handlePageChange(event: IEventPaginator) {
-    const returnData: any = await this.recipeService.getRecipes({
-      page: event.page + 1 || 1,
-      limit: this.itemsPerPage,
-    });
-    this.recipes = returnData.data as Recipe[];
+  handleSearchInput(event: any) {
+    this.searchInput = event.target.value;
   }
 
-  async handleTableFilter(event: any) {
-    this.globalFilter = event.filters.global.value;
+  async handleLazyLoad(event: any) {
+    if (event && event.globalFilter) {
+      this.searchInput = event.globalFilter.searchInput;
+      this.currentRecords = event.globalFilter.page + 1;
+      event.first = event.globalFilter.page;
+    }
 
-    console.log(this.globalFilter);
+    this.params = {
+      page: Math.floor(this.currentRecords / event.rows + 1),
+      limit: this.itemsPerPage,
+      sortBy: event.sortField
+        ? `${event.sortField}:${
+            SORT_ORDER[event.sortOrder as keyof typeof SORT_ORDER]
+          }`
+        : '',
+    };
 
-    // const returnData: any = await this.recipeService.getRecipes({
-    //   page: event.page + 1 || 1,
-    //   limit: this.itemsPerPage,
-    // });
-    // this.recipes = returnData.data as Recipe[];
+    if (this.searchInput) {
+      const globalFilterQuery = `$or:$ilike:${this.searchInput}`;
+
+      this.params.filter = {
+        name: globalFilterQuery,
+        level: {
+          name: globalFilterQuery,
+        },
+        category: {
+          name: globalFilterQuery,
+        },
+        cuisine: {
+          name: globalFilterQuery,
+        },
+      };
+    }
+
+    await this.reloadTable();
   }
 }

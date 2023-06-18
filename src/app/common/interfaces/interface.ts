@@ -1,6 +1,8 @@
 export interface IQuery {
   page?: number;
   limit?: number;
+  filter?: object;
+  sortBy?: string;
 }
 
 export interface IReturnData<Template> {

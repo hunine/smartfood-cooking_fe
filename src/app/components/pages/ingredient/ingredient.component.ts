@@ -3,7 +3,8 @@ import { Ingredient } from 'src/app/api/ingredient';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { IngredientService } from 'src/app/service/ingredient.service';
-import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
+import { SORT_ORDER } from 'src/app/common/constants/sort-order';
+import { IQuery } from 'src/app/common/interfaces/interface';
 
 @Component({
   templateUrl: './ingredient.component.html',
@@ -35,11 +36,16 @@ export class IngredientComponent implements OnInit {
 
   uploadedFiles: any[] = [];
 
+  params: IQuery = {};
+
+  // Filter
+  searchInput: string = '';
+
   // Pagination
   itemsPerPage: number = 10;
   totalPages: number = 0;
   totalItems: number = 0;
-  currentPage: number = 0;
+  currentRecords: number = 0;
 
   constructor(
     private ingredientService: IngredientService,
@@ -157,19 +163,12 @@ export class IngredientComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.ingredientService.getIngredients({
-      page: this.currentPage || 1,
-      limit: this.itemsPerPage,
-    });
+    const returnData: any = await this.ingredientService.getIngredients(this.params);
+    const { totalPages, totalItems } = returnData.meta;
+
+    this.totalPages = totalPages;
+    this.totalItems = totalItems;
     this.ingredients = returnData.data as Ingredient[];
-
-    const { currentPage, totalPages, totalItems, itemsPerPage } =
-      returnData.meta;
-
-      this.totalPages = totalPages;
-      this.currentPage = currentPage;
-      this.totalItems = totalItems;
-      this.itemsPerPage = itemsPerPage;
   }
 
   onUpload(event: any) {
@@ -185,11 +184,33 @@ export class IngredientComponent implements OnInit {
   }
 
   // Handle
-  async handlePageChange(event: IEventPaginator) {
-    const returnData: any = await this.ingredientService.getIngredients({
-      page: event.page + 1 || 1,
+  handleSearchInput(event: any) {
+    this.searchInput = event.target.value;
+  }
+
+  async handleLazyLoad(event: any) {
+    if (event && event.globalFilter) {
+      this.searchInput = event.globalFilter.searchInput;
+      this.currentRecords = event.globalFilter.page + 1;
+      event.first = event.globalFilter.page;
+    }
+
+    this.params = {
+      page: Math.floor(this.currentRecords / event.rows + 1),
       limit: this.itemsPerPage,
-    });
-    this.ingredients = returnData.data as Ingredient[];
+      sortBy: event.sortField
+        ? `${event.sortField}:${
+            SORT_ORDER[event.sortOrder as keyof typeof SORT_ORDER]
+          }`
+        : '',
+    };
+
+    if (this.searchInput) {
+      this.params.filter = {
+        name: `$ilike:${this.searchInput}`,
+      };
+    }
+
+    await this.reloadTable();
   }
 }

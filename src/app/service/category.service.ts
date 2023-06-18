@@ -3,17 +3,16 @@ import { HttpService } from './http.service';
 import { Category } from '../api/category';
 import { IQuery, IReturnData } from '../common/interfaces/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
+import { paginationHelper } from '../common/helpers';
 
 @Injectable()
 export class CategoryService {
   constructor(private httpService: HttpService) {}
 
   async getCategories(query: IQuery): Promise<IReturnData<Category>> {
-    const queryStr = Object.entries(query).map(([key, value]) =>
-      value ? `${key}=${value}` : ''
-    );
+    const queryStr = paginationHelper.objectToString(query);
 
-    const url = `${ManagementUrlConfig.categoryUrl}?${queryStr.join('&')}`;
+    const url = `${ManagementUrlConfig.categoryUrl}?${queryStr}`;
     return this.httpService.get(url);
   }
 

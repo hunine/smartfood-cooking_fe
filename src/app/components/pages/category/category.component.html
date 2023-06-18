@@ -21,15 +21,15 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="categories" [columns]="cols" responsiveLayout="scroll"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [(selection)]="selectedCategories"
-        selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="categories" [columns]="cols" responsiveLayout="scroll" [rows]="itemsPerPage"
+        [(selection)]="selectedCategories" selectionMode="multiple" [rowHover]="true" dataKey="id" [lazy]="true"
+        (onLazyLoad)="handleLazyLoad($event)">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Categories</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
                 class="w-full sm:w-auto" />
             </span>
           </div>
@@ -67,7 +67,8 @@
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator (onPageChange)="handlePageChange($event)" [first]="currentPage" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')"
+        [first]="currentRecords" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" header="Category Details" [modal]="true"

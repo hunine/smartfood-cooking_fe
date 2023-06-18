@@ -3,17 +3,16 @@ import { Level } from '../api/level';
 import { HttpService } from './http.service';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
 import { IQuery, IReturnData } from '../common/interfaces/interface';
+import { paginationHelper } from '../common/helpers';
 
 @Injectable()
 export class LevelService {
   constructor(private httpService: HttpService) {}
 
   async getLevels(query: IQuery): Promise<IReturnData<Level>> {
-    const queryStr = Object.entries(query).map(([key, value]) =>
-      value ? `${key}=${value}` : ''
-    );
+    const queryStr = paginationHelper.objectToString(query);
 
-    const url = `${ManagementUrlConfig.levelUrl}?${queryStr.join('&')}`;
+    const url = `${ManagementUrlConfig.levelUrl}?${queryStr}`;
     return this.httpService.get(url);
   }
 

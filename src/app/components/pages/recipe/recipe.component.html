@@ -20,15 +20,15 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="recipes" [columns]="cols" responsiveLayout="scroll"
-        [globalFilterFields]="['name']" (onFilter)="handleTableFilter($event)"
-        [(selection)]="selectedRecipes" selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="recipes" [columns]="cols" responsiveLayout="scroll" [rows]="itemsPerPage"
+        [(selection)]="selectedRecipes" selectionMode="multiple" [rowHover]="true" dataKey="id" [lazy]="true"
+        (onLazyLoad)="handleLazyLoad($event)">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Recipes</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
                 class="w-full sm:w-auto" />
             </span>
           </div>
@@ -41,9 +41,9 @@
             <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th>Image</th>
-            <th pSortableColumn="price">Level <p-sortIcon field="price"></p-sortIcon></th>
-            <th pSortableColumn="category">Category <p-sortIcon field="category"></p-sortIcon></th>
-            <th pSortableColumn="cuisine">Cuisine <p-sortIcon field="cuisine"></p-sortIcon></th>
+            <th pSortableColumn="level.name">Level <p-sortIcon field="level"></p-sortIcon></th>
+            <th pSortableColumn="category.name">Category <p-sortIcon field="category"></p-sortIcon></th>
+            <th pSortableColumn="cuisine.name">Cuisine <p-sortIcon field="cuisine"></p-sortIcon></th>
             <th></th>
           </tr>
         </ng-template>
@@ -86,7 +86,8 @@
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator (onPageChange)="handlePageChange($event)" [first]="currentPage" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')" [first]="currentRecords"
+        [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="recipeDialog" [style]="{width: '1000px'}" header="Recipe Detail" [modal]="true"
