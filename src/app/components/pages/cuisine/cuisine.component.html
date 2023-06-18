@@ -8,7 +8,8 @@
             <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
               (click)="openNew()"></button>
             <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
-              (click)="deleteSelectedCuisineArray()" [disabled]="!selectedCuisineArray || !selectedCuisineArray.length"></button>
+              (click)="deleteSelectedCuisineArray()"
+              [disabled]="!selectedCuisineArray || !selectedCuisineArray.length"></button>
           </div>
         </ng-template>
 
@@ -20,18 +21,17 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="cuisineArray" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
-        [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedCuisineArray"
-        selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="cuisineArray" [columns]="cols" responsiveLayout="scroll" [rows]="itemsPerPage"
+        [(selection)]="selectedCuisineArray" selectionMode="multiple" [rowHover]="true" dataKey="id" [lazy]="true"
+        (onLazyLoad)="handleLazyLoad($event)">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Cuisine</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
-                class="w-full sm:w-auto" />
+              <input pInputText type="text"
+                (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')"
+                placeholder="Search..." class="w-full sm:w-auto" />
             </span>
           </div>
         </ng-template>
@@ -68,6 +68,8 @@
           </tr>
         </ng-template>
       </p-table>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')"
+        [first]="currentRecords" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="cuisineDialog" [style]="{width: '450px'}" header="Cuisine Details" [modal]="true"

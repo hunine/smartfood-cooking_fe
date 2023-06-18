@@ -8,7 +8,8 @@
             <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
               (click)="openNew()"></button>
             <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
-              (click)="deleteSelectedCategories()" [disabled]="!selectedCategories || !selectedCategories.length"></button>
+              (click)="deleteSelectedCategories()"
+              [disabled]="!selectedCategories || !selectedCategories.length"></button>
           </div>
         </ng-template>
 
@@ -20,17 +21,15 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="categories" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
-        [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [(selection)]="selectedCategories"
-        selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="categories" [columns]="cols" responsiveLayout="scroll" [rows]="itemsPerPage"
+        [(selection)]="selectedCategories" selectionMode="multiple" [rowHover]="true" dataKey="id" [lazy]="true"
+        (onLazyLoad)="handleLazyLoad($event)">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Categories</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
                 class="w-full sm:w-auto" />
             </span>
           </div>
@@ -68,6 +67,8 @@
           </tr>
         </ng-template>
       </p-table>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')"
+        [first]="currentRecords" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="categoryDialog" [style]="{width: '450px'}" header="Category Details" [modal]="true"

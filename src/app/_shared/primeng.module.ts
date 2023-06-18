@@ -37,6 +37,7 @@ import { StepsModule } from 'primeng/steps';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { RatingModule } from 'primeng/rating';
 
 @NgModule({
   imports: [
@@ -77,6 +78,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FileUploadModule,
     ToolbarModule,
     InputNumberModule,
+    RatingModule,
   ],
   exports: [
     CheckboxModule,
@@ -116,6 +118,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     FileUploadModule,
     ToolbarModule,
     InputNumberModule,
+    RatingModule,
   ],
   providers: [MessageService],
 })

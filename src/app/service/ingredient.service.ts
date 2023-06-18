@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Ingredient } from '../api/ingredient';
 import { HttpService } from './http.service';
-import { IQuery, IReturnData } from '../common/interface';
+import { IQuery, IReturnData } from '../common/interfaces/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
+import { paginationHelper } from '../common/helpers';
 
 @Injectable()
 export class IngredientService {
   constructor(private httpService: HttpService) {}
 
   async getIngredients(query: IQuery): Promise<IReturnData<Ingredient>> {
-    const queryStr = Object.entries(query).map(([key, value]) =>
-      value ? `${key}=${value}` : ''
-    );
+    const queryStr = paginationHelper.objectToString(query);
 
-    const url = `${ManagementUrlConfig.ingredientUrl}?${queryStr.join('&')}`;
+    const url = `${ManagementUrlConfig.ingredientUrl}?${queryStr}`;
     return this.httpService.get(url);
   }
 

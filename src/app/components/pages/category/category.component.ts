@@ -3,6 +3,9 @@ import { Category } from 'src/app/api/category';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { CategoryService } from 'src/app/service/category.service';
+import { IEventPaginator } from 'src/app/common/interfaces/event-paginator.interface';
+import { IQuery } from 'src/app/common/interfaces/interface';
+import { SORT_ORDER } from 'src/app/common/constants/sort-order';
 
 @Component({
   templateUrl: './category.component.html',
@@ -31,13 +34,16 @@ export class CategoryComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  itemsPerPage: number = 50;
+  params: IQuery = {};
 
+  // Filter
+  searchInput: string = '';
+
+  // Pagination
+  itemsPerPage: number = 10;
   totalPages: number = 0;
-
-  totalRecords: number = 0;
-
-  currentPage: number = 0;
+  totalItems: number = 0;
+  currentRecords: number = 0;
 
   constructor(
     private categoryService: CategoryService,
@@ -101,7 +107,8 @@ export class CategoryComponent implements OnInit {
 
   async confirmDelete() {
     this.deleteCategoryDialog = false;
-    this.category.id && (await this.categoryService.deleteCategory(this.category.id));
+    this.category.id &&
+      (await this.categoryService.deleteCategory(this.category.id));
     await this.reloadTable();
 
     this.messageService.add({
@@ -155,13 +162,44 @@ export class CategoryComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.categoryService.getCategories({
-      page: this.currentPage || 1,
-      limit: this.itemsPerPage,
-    });
+    const returnData: any = await this.categoryService.getCategories(
+      this.params
+    );
+    const { totalPages, totalItems } = returnData.meta;
+
+    this.totalPages = totalPages;
+    this.totalItems = totalItems;
     this.categories = returnData.data as Category[];
-    this.totalPages = returnData.totalPages;
-    this.currentPage = returnData.currentPage;
-    this.totalRecords = returnData.totalItems;
+  }
+
+  // Handle
+  handleSearchInput(event: any) {
+    this.searchInput = event.target.value;
+  }
+
+  async handleLazyLoad(event: any) {
+    if (event && event.globalFilter) {
+      this.searchInput = event.globalFilter.searchInput;
+      this.currentRecords = event.globalFilter.page + 1;
+      event.first = event.globalFilter.page;
+    }
+
+    this.params = {
+      page: Math.floor(this.currentRecords / event.rows + 1),
+      limit: this.itemsPerPage,
+      sortBy: event.sortField
+        ? `${event.sortField}:${
+            SORT_ORDER[event.sortOrder as keyof typeof SORT_ORDER]
+          }`
+        : '',
+    };
+
+    if (this.searchInput) {
+      this.params.filter = {
+        name: `$ilike:${this.searchInput}`,
+      };
+    }
+
+    await this.reloadTable();
   }
 }

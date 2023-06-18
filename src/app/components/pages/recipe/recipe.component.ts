@@ -18,6 +18,8 @@ import { CategoryService } from 'src/app/service/category.service';
 import { CuisineService } from 'src/app/service/cuisine.service';
 import ValidationHelper from 'src/app/helper/validation';
 import { IngredientService } from 'src/app/service/ingredient.service';
+import { SORT_ORDER } from 'src/app/common/constants/sort-order';
+import { IQuery } from 'src/app/common/interfaces/interface';
 
 @Component({
   templateUrl: './recipe.component.html',
@@ -46,15 +48,17 @@ export class RecipeComponent implements OnInit {
   selectedRecipes: Recipe[] = [];
   submitted: boolean = false;
   cols: any[] = [];
-  statuses: any[] = [];
-  rowsPerPageOptions = [5, 10, 20];
   uploadedFiles: any[] = [];
+  params: IQuery = {};
+
+  // Filter
+  searchInput: string = '';
 
   // Pagination
-  itemsPerPage: number = 1000;
+  itemsPerPage: number = 10;
   totalPages: number = 0;
-  totalRecords: number = 0;
-  currentPage: number = 0;
+  totalItems: number = 0;
+  currentRecords: number = 0;
 
   // List
   levels: Level[] = [];
@@ -269,15 +273,12 @@ export class RecipeComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.recipeService.getRecipes({
-      page: this.currentPage || 1,
-      limit: this.itemsPerPage,
-    });
-    this.recipes = returnData.data as Recipe[];
+    const returnData: any = await this.recipeService.getRecipes(this.params);
+    const { totalPages, totalItems } = returnData.meta;
 
-    this.totalPages = returnData.totalPages;
-    this.currentPage = returnData.currentPage;
-    this.totalRecords = returnData.totalItems;
+    this.totalPages = totalPages;
+    this.totalItems = totalItems;
+    this.recipes = returnData.data as Recipe[];
   }
 
   onUpload(event: any) {
@@ -374,5 +375,46 @@ export class RecipeComponent implements OnInit {
     if (this.recipe.recipeStep && this.recipe.recipeStep.length > 1) {
       this.recipe.recipeStep.splice(index, 1);
     }
+  }
+
+  handleSearchInput(event: any) {
+    this.searchInput = event.target.value;
+  }
+
+  async handleLazyLoad(event: any) {
+    if (event && event.globalFilter) {
+      this.searchInput = event.globalFilter.searchInput;
+      this.currentRecords = event.globalFilter.page + 1;
+      event.first = event.globalFilter.page;
+    }
+
+    this.params = {
+      page: Math.floor(this.currentRecords / event.rows + 1),
+      limit: this.itemsPerPage,
+      sortBy: event.sortField
+        ? `${event.sortField}:${
+            SORT_ORDER[event.sortOrder as keyof typeof SORT_ORDER]
+          }`
+        : '',
+    };
+
+    if (this.searchInput) {
+      const globalFilterQuery = `$or:$ilike:${this.searchInput}`;
+
+      this.params.filter = {
+        name: globalFilterQuery,
+        level: {
+          name: globalFilterQuery,
+        },
+        category: {
+          name: globalFilterQuery,
+        },
+        cuisine: {
+          name: globalFilterQuery,
+        },
+      };
+    }
+
+    await this.reloadTable();
   }
 }

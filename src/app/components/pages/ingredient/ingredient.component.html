@@ -21,17 +21,15 @@
         </ng-template>
       </p-toolbar>
 
-      <p-table #dt [value]="ingredients" [columns]="cols" responsiveLayout="scroll" [rows]="10"
-        [globalFilterFields]="['name','country.name','representative.name','status']" [paginator]="true"
-        [rowsPerPageOptions]="[10,20,30]" [showCurrentPageReport]="true"
-        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-        [(selection)]="selectedIngredients" selectionMode="multiple" [rowHover]="true" dataKey="id">
+      <p-table #dt [value]="ingredients" [columns]="cols" responsiveLayout="scroll" [rows]="itemsPerPage"
+        [(selection)]="selectedIngredients" selectionMode="multiple" [rowHover]="true" dataKey="id" [lazy]="true"
+        (onLazyLoad)="handleLazyLoad($event)">
         <ng-template pTemplate="caption">
           <div class="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
             <h5 class="m-0">Manage Ingredients</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="onGlobalFilter(dt, $event)" placeholder="Search..."
+              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
                 class="w-full sm:w-auto" />
             </span>
           </div>
@@ -74,6 +72,8 @@
           </tr>
         </ng-template>
       </p-table>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')" [first]="currentRecords"
+        [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="ingredientDialog" [style]="{width: '1000px'}" header="Ingredient Details" [modal]="true"

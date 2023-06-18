@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Recipe, RecipeDto } from '../api/recipe';
 import { HttpService } from './http.service';
-import { IQuery } from '../common/interface';
+import { IQuery } from '../common/interfaces/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
+import { paginationHelper } from '../common/helpers';
 
 @Injectable()
 export class RecipeService {
   constructor(private httpService: HttpService) {}
 
-  async getRecipes(query: IQuery): Promise<Recipe[]> {
-    const queryStr = Object.entries(query).map(([key, value]) =>
-      value ? `${key}=${value}` : ''
-    );
+  async getRecipes(query: IQuery) {
+    const queryStr = paginationHelper.objectToString(query);
 
-    const url = `${ManagementUrlConfig.recipeUrl}?${queryStr.join('&')}`;
+    const url = `${ManagementUrlConfig.recipeUrl}?${queryStr}`;
     return this.httpService.get(url);
   }
 
