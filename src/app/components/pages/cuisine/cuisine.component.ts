@@ -34,7 +34,10 @@ export class CuisineComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  params: IQuery = {};
+  params: IQuery = {
+    page: 1,
+    limit: 10,
+  };
 
   // Filter
   searchInput: string = '';
@@ -161,7 +164,9 @@ export class CuisineComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.cuisineService.getCuisineArray(this.params);
+    const returnData: any = await this.cuisineService.getCuisineArray(
+      this.params
+    );
     const { totalPages, totalItems } = returnData.meta;
 
     this.totalPages = totalPages;

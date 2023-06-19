@@ -49,7 +49,10 @@ export class RecipeComponent implements OnInit {
   submitted: boolean = false;
   cols: any[] = [];
   uploadedFiles: any[] = [];
-  params: IQuery = {};
+  params: IQuery = {
+    page: 1,
+    limit: 10,
+  };
 
   // Filter
   searchInput: string = '';

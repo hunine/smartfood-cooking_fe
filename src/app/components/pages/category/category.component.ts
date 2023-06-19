@@ -34,7 +34,10 @@ export class CategoryComponent implements OnInit {
 
   rowsPerPageOptions = [5, 10, 20];
 
-  params: IQuery = {};
+  params: IQuery = {
+    page: 1,
+    limit: 10,
+  };
 
   // Filter
   searchInput: string = '';

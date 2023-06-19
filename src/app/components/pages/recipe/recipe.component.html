@@ -28,8 +28,9 @@
             <h5 class="m-0">Manage Recipes</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
-                class="w-full sm:w-auto" />
+              <input pInputText type="text"
+                (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')"
+                placeholder="Search..." class="w-full sm:w-auto" />
             </span>
           </div>
         </ng-template>
@@ -60,7 +61,7 @@
               {{ recipe.name }}
             </td>
             <td style="width:14%; min-width:10rem;"><span class="p-column-title">Image</span>
-              <img [src]="'assets/demo/images/product/' + recipe.image" [alt]="recipe.name" width="100"
+              <img [src]="recipe.media.length > 0 && recipe.media[0].url" [alt]="recipe.name" width="100"
                 class="shadow-4" />
             </td>
             <td style="width:14%; min-width:8rem;">
@@ -86,8 +87,8 @@
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')" [first]="currentRecords"
-        [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')"
+        [first]="currentRecords" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="recipeDialog" [style]="{width: '1000px'}" header="Recipe Detail" [modal]="true"
@@ -99,8 +100,6 @@
         </div>
 
         <div *ngIf="activeIndexStep === 0" class="card">
-          <img [src]="'assets/demo/images/product/' + recipe.image" [alt]="recipe.image" width="150"
-            class="mt-0 mx-auto mb-5 block shadow-2" *ngIf="recipe.image">
           <div class="field">
             <label for="name">Name</label>
             <input type="text" pInputText id="name" [(ngModel)]="recipe.name" required autofocus

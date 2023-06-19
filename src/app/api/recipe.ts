@@ -19,7 +19,7 @@ export interface Step {
 export interface Recipe {
   id?: string;
   name: string;
-  image?: string;
+  media?: string;
   description?: string;
   level: Level;
   category: Category;
