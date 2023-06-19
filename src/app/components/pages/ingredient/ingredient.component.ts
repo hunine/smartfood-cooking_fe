@@ -36,7 +36,10 @@ export class IngredientComponent implements OnInit {
 
   uploadedFiles: any[] = [];
 
-  params: IQuery = {};
+  params: IQuery = {
+    page: 1,
+    limit: 10,
+  };
 
   // Filter
   searchInput: string = '';
@@ -163,7 +166,9 @@ export class IngredientComponent implements OnInit {
   }
 
   async reloadTable() {
-    const returnData: any = await this.ingredientService.getIngredients(this.params);
+    const returnData: any = await this.ingredientService.getIngredients(
+      this.params
+    );
     const { totalPages, totalItems } = returnData.meta;
 
     this.totalPages = totalPages;
