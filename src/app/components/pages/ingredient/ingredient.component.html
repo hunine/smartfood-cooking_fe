@@ -29,8 +29,9 @@
             <h5 class="m-0">Manage Ingredients</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
-                class="w-full sm:w-auto" />
+              <input pInputText type="text"
+                (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')"
+                placeholder="Search..." class="w-full sm:w-auto" />
             </span>
           </div>
         </ng-template>
@@ -58,7 +59,7 @@
               {{ ingredient.name }}
             </td>
             <td style="width:36%; min-width:10rem;"><span class="p-column-title">Image</span>
-              <img [src]="'assets/demo/images/product/' + ingredient.image" [alt]="ingredient.name" width="100"
+              <img [src]="ingredient.media.length > 0 && ingredient.media[0].url" [alt]="ingredient.name" width="100"
                 class="shadow-4" />
             </td>
             <td style="width:14%; min-width:10rem;">
@@ -72,8 +73,8 @@
           </tr>
         </ng-template>
       </p-table>
-      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')" [first]="currentRecords"
-        [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
+      <p-paginator (onPageChange)="dt.filterGlobal({ searchInput, page: $event.first }, 'contains')"
+        [first]="currentRecords" [rows]="itemsPerPage" [totalRecords]="totalItems"></p-paginator>
     </div>
 
     <p-dialog [(visible)]="ingredientDialog" [style]="{width: '1000px'}" header="Ingredient Details" [modal]="true"
