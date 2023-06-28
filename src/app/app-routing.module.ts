@@ -10,11 +10,11 @@ import { NotfoundComponent } from './components/notfound/notfound.component';
                 path: '', component: AppLayoutComponent,
                 children: [
                     { path: '', loadChildren: () => import('./components/dashboard/dashboard.module').then(m => m.DashboardModule) },
-                    { path: 'pages', loadChildren: () => import('./components/pages/pages.module').then(m => m.PagesModule) }
+                    { path: 'pages', loadChildren: () => import('./components/pages/pages.module').then(m => m.PagesModule) },
+                    { path: 'auth/update-profile', loadChildren: () => import('./components/auth/update-profile/update-profile.module').then(m => m.UpdateProfileModule) },
                 ]
             },
             { path: 'auth', loadChildren: () => import('./components/auth/auth.module').then(m => m.AuthModule) },
-            { path: 'landing', loadChildren: () => import('./components/landing/landing.module').then(m => m.LandingModule) },
             { path: 'notfound', component: NotfoundComponent },
             { path: '**', redirectTo: '/notfound' },
         ], { scrollPositionRestoration: 'enabled', anchorScrolling: 'enabled', onSameUrlNavigation: 'reload' })

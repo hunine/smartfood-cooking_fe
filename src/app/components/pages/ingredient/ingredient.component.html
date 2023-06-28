@@ -62,12 +62,12 @@
               <img [src]="ingredient.media.length > 0 && ingredient.media[0].url" [alt]="ingredient.name" width="100"
                 class="shadow-4" />
             </td>
-            <td style="width:14%; min-width:10rem;">
+            <td style="width:10%; min-width:10rem;">
               <div class="flex">
-                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                  (click)="editIngredient(ingredient)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                  (click)="deleteIngredient(ingredient)"></button>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2"
+                  tooltipPosition="top" pTooltip="Edit" (click)="editIngredient(ingredient)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                  tooltipPosition="top" pTooltip="Delete" (click)="deleteIngredient(ingredient)"></button>
               </div>
             </td>
           </tr>

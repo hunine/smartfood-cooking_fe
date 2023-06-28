@@ -1,0 +1,64 @@
+<div class="grid">
+  <div class="col-12">
+    <div class="card p-fluid">
+      <div class="card-body grid">
+        <div class="col-6 container mb-5">
+          <h5 class="mb-5">Update Profile</h5>
+          <div class="card">
+            <div class="field mb-5">
+              <label for="email">Email</label>
+              <input type="text" pInputText id="email" [(ngModel)]="user.email" required autofocus disabled="true" />
+            </div>
+            <div class="field mb-5">
+              <label for="first-name">First Name</label>
+              <input type="text" pInputText id="first-name" [(ngModel)]="user.firstName" required autofocus
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.firstName}" />
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !user.firstName">Name is
+                required.</small>
+            </div>
+            <div class="field mb-5">
+              <label for="last-name">Last Name</label>
+              <input type="text" pInputText id="last-name" [(ngModel)]="user.lastName" required autofocus
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.lastName}" />
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !user.lastName">Name is
+                required.</small>
+            </div>
+          </div>
+        </div>
+        <div class="col-6 container mb-5">
+          <h5 class="mb-5">Change Password</h5>
+          <div class="card">
+            <div class="field">
+              <label for="current-password">Current Password</label>
+              <p-password id="current-password" [(ngModel)]="changingPassword.currentPassword"
+                placeholder="Current Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full"
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !changingPassword.currentPassword}"></p-password>
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !changingPassword.currentPassword">Name is
+                required.</small>
+            </div>
+            <div class="field">
+              <label for="new-password">New Password</label>
+              <p-password id="new-password" [(ngModel)]="changingPassword.newPassword" placeholder="New Password"
+                [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full"
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !changingPassword.newPassword}"></p-password>
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !changingPassword.newPassword">Name is
+                required.</small>
+            </div>
+            <div class="field">
+              <label for="confirm-password">Confirm Password</label>
+              <p-password id="confirm-password" [(ngModel)]="changingPassword.confirmNewPassword"
+                placeholder="Confirm New Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full"
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !changingPassword.confirmNewPassword}"></p-password>
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !changingPassword.confirmNewPassword">Name
+                is
+                required.</small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer flex justify-content-end  ">
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button" style="width: 100px;"></button>
+      </div>
+    </div>
+  </div>
+</div>

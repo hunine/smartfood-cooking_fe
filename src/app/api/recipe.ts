@@ -19,6 +19,7 @@ export interface Step {
 export interface Recipe {
   id?: string;
   name: string;
+  rating: number;
   media?: string;
   description?: string;
   level: Level;
@@ -44,4 +45,9 @@ export interface RecipeDto {
   cuisineId: string;
   ingredients: QuantificationDto[];
   steps: Step[];
+}
+
+export interface CountRecipes {
+  totalRecipes: number;
+  newRecipesLastWeek: number;
 }

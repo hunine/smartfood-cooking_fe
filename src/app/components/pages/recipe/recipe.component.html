@@ -42,6 +42,7 @@
             <th pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon></th>
             <th pSortableColumn="name">Name <p-sortIcon field="name"></p-sortIcon></th>
             <th>Image</th>
+            <th pSortableColumn="rating">Rating <p-sortIcon field="rating"></p-sortIcon></th>
             <th pSortableColumn="level.name">Level <p-sortIcon field="level"></p-sortIcon></th>
             <th pSortableColumn="category.name">Category <p-sortIcon field="category"></p-sortIcon></th>
             <th pSortableColumn="cuisine.name">Cuisine <p-sortIcon field="cuisine"></p-sortIcon></th>
@@ -64,24 +65,27 @@
               <img [src]="recipe.media.length > 0 && recipe.media[0].url" [alt]="recipe.name" width="100"
                 class="shadow-4" />
             </td>
-            <td style="width:14%; min-width:8rem;">
+            <td style="width:12%; min-width:8rem;">
+              <p-rating [ngModel]="recipe.rating" [readonly]="true" [cancel]="false"></p-rating>
+            </td>
+            <td style="width:12%; min-width:8rem;">
               <span class="p-column-title">Level</span>
               {{ recipe.level.name }}
             </td>
-            <td style="width:14%; min-width:10rem;">
+            <td style="width:12%; min-width:8rem;">
               <span class="p-column-title">Category</span>
               {{ recipe.category.name }}
             </td>
-            <td style="width:14%; min-width:10rem;">
+            <td style="width:12%; min-width:8rem;">
               <span class="p-column-title">Cuisine</span>
               {{ recipe.cuisine.name }}
             </td>
-            <td>
+            <td style="width:10%; min-width:10rem;">
               <div class="flex">
-                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                  (click)="editRecipe(recipe)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                  (click)="deleteRecipe(recipe)"></button>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2"
+                  tooltipPosition="top" pTooltip="Edit" (click)="editRecipe(recipe)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                  tooltipPosition="top" pTooltip="Delete" (click)="deleteRecipe(recipe)"></button>
               </div>
             </td>
           </tr>

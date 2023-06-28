@@ -11,6 +11,7 @@ import { AppFooterComponent } from './footer/app.footer.component';
 import { AppMenuComponent } from './menu/app.menu.component';
 import { AppSidebarComponent } from './sidebar/app.sidebar.component';
 import { AppLayoutComponent } from './app.layout.component';
+import { CustomPrimengModule } from '../_shared/primeng.module';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { AppLayoutComponent } from './app.layout.component';
     AppLayoutComponent,
   ],
   imports: [
+    CustomPrimengModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,

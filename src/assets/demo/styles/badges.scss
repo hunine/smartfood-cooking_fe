@@ -1,5 +1,5 @@
 .customer-badge,
-.product-badge,
+.user-badge,
 .order-badge {
     border-radius: var(--border-radius);
     padding: .25em .5rem;
@@ -9,20 +9,15 @@
     letter-spacing: .3px;
 }
 
-.product-badge {
-    &.status-instock {
+.user-badge {
+    &.status-active {
         background: #C8E6C9;
         color: #256029;
     }
 
-    &.status-outofstock {
+    &.status-inactive {
         background: #FFCDD2;
         color: #C63737;
-    }
-
-    &.status-lowstock {
-        background: #FEEDAF;
-        color: #8A5340;
     }
 }
 
@@ -55,27 +50,5 @@
     &.status-proposal {
         background: #FFD8B2;
         color: #805B36;
-    }
-}
-
-.order-badge {
-    &.order-delivered {
-        background: #C8E6C9;
-        color: #256029;
-    }
-
-    &.order-cancelled {
-        background: #FFCDD2;
-        color: #C63737;
-    }
-
-    &.order-pending {
-        background: #FEEDAF;
-        color: #8A5340;
-    }
-
-    &.order-returned {
-        background: #ECCFFF;
-        color: #694382;
     }
 }

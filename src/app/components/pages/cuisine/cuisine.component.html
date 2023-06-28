@@ -59,10 +59,10 @@
             </td>
             <td style="width:10%; min-width:10rem;">
               <div class="flex">
-                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                  (click)="editCuisine(cuisine)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                  (click)="deleteCuisine(cuisine)"></button>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2"
+                tooltipPosition="top" pTooltip="Edit" (click)="editCuisine(cuisine)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                tooltipPosition="top" pTooltip="Delete" (click)="deleteCuisine(cuisine)"></button>
               </div>
             </td>
           </tr>
