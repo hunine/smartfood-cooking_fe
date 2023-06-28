@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DashboardComponent } from './dashboard.component';
-import { DashboardsRoutingModule } from './dashboard-routing.module';
 import { CustomPrimengModule } from 'src/app/_shared/primeng.module';
+import { UpdateProfilesRoutingModule } from './update-profile-routing.module';
+import { UpdateProfileComponent } from './update-profile.component';
 
 @NgModule({
   imports: [
     CustomPrimengModule,
     CommonModule,
     FormsModule,
-    DashboardsRoutingModule,
+    UpdateProfilesRoutingModule,
   ],
-  declarations: [DashboardComponent],
+  declarations: [UpdateProfileComponent],
 })
-export class DashboardModule {}
+export class UpdateProfileModule {}

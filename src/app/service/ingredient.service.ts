@@ -36,4 +36,9 @@ export class IngredientService {
     const url = `${ManagementUrlConfig.ingredientUrl}${query}`;
     return this.httpService.delete(url);
   }
+
+  async countIngredients() {
+    const url = `${ManagementUrlConfig.ingredientUrl}/count`;
+    return this.httpService.get(url);
+  }
 }

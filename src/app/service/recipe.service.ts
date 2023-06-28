@@ -46,4 +46,9 @@ export class RecipeService {
     const url = `${ManagementUrlConfig.recipeUrl}${query}`;
     return this.httpService.delete(url);
   }
+
+  async countRecipes() {
+    const url = `${ManagementUrlConfig.recipeUrl}/count`;
+    return this.httpService.get(url);
+  }
 }
