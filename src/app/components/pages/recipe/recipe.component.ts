@@ -33,6 +33,7 @@ export class RecipeComponent implements OnInit {
   recipes: Recipe[] = [];
   recipe: Recipe = {
     name: '',
+    rating: 0,
     level: {
       name: '',
     },
@@ -95,6 +96,7 @@ export class RecipeComponent implements OnInit {
   private resetRecipeForm() {
     this.recipe = {
       name: '',
+      rating: 0,
       level: {
         name: '',
       },

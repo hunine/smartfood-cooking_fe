@@ -38,6 +38,10 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToolbarModule } from 'primeng/toolbar';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { RatingModule } from 'primeng/rating';
+import { MenuModule } from 'primeng/menu';
+import { ChartModule } from 'primeng/chart';
+import { PasswordModule } from 'primeng/password';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
   imports: [
@@ -79,6 +83,10 @@ import { RatingModule } from 'primeng/rating';
     ToolbarModule,
     InputNumberModule,
     RatingModule,
+    MenuModule,
+    ChartModule,
+    PasswordModule,
+    TagModule,
   ],
   exports: [
     CheckboxModule,
@@ -119,6 +127,10 @@ import { RatingModule } from 'primeng/rating';
     ToolbarModule,
     InputNumberModule,
     RatingModule,
+    MenuModule,
+    ChartModule,
+    PasswordModule,
+    TagModule,
   ],
   providers: [MessageService],
 })

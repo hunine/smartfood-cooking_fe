@@ -49,6 +49,12 @@ export class AppMenuComponent implements OnInit {
           },
         ],
       },
+      {
+        label: 'Permission',
+        items: [
+          { label: 'Users', icon: 'fa-solid fa-user', routerLink: ['/pages/user'] },
+        ]
+      }
     ];
   }
 }

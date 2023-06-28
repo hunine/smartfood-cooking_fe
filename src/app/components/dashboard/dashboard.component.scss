@@ -1,0 +1,4 @@
+:host ::ng-deep .p-rating-icon:not(.p-rating-cancel),
+:host ::ng-deep .p-rating-icon:not(.p-rating-cancel):hover {
+  color: var(--primary-color) !important;
+}

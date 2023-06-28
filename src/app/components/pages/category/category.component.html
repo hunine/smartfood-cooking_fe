@@ -29,8 +29,9 @@
             <h5 class="m-0">Manage Categories</h5>
             <span class="block mt-2 md:mt-0 p-input-icon-left">
               <i class="pi pi-search"></i>
-              <input pInputText type="text" (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')" placeholder="Search..."
-                class="w-full sm:w-auto" />
+              <input pInputText type="text"
+                (input)="handleSearchInput($event); dt.filterGlobal({ searchInput, page: 0 }, 'contains')"
+                placeholder="Search..." class="w-full sm:w-auto" />
             </span>
           </div>
         </ng-template>
@@ -56,12 +57,12 @@
               <span class="p-column-title">Name</span>
               {{ category.name }}
             </td>
-            <td style="width:14%; min-width:10rem;">
+            <td style="width:10%; min-width:10rem;">
               <div class="flex">
-                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2"
-                  (click)="editCategory(category)"></button>
-                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
-                  (click)="deleteCategory(category)"></button>
+                <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2"
+                  tooltipPosition="top" pTooltip="Edit" (click)="editCategory(category)"></button>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-danger"
+                  tooltipPosition="top" pTooltip="Delete" (click)="deleteCategory(category)"></button>
               </div>
             </td>
           </tr>

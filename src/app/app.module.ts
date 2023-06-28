@@ -11,6 +11,8 @@ import { CuisineService } from './service/cuisine.service';
 import { LevelService } from './service/level.service';
 import { HttpService } from './service/http.service';
 import { CustomPrimengModule } from './_shared/primeng.module';
+import { UserService } from './service/user.service';
+import { CookingHistoryService } from './service/cooking-history.service';
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
@@ -23,6 +25,8 @@ import { CustomPrimengModule } from './_shared/primeng.module';
     CategoryService,
     CuisineService,
     LevelService,
+    UserService,
+    CookingHistoryService,
   ],
   bootstrap: [AppComponent],
 })
