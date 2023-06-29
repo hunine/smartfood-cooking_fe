@@ -137,9 +137,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
           },
         },
         y: {
+          beginAtZero: true,
+          suggestedMax: maxValueInChart,
           ticks: {
             color: textColorSecondary,
-            beginAtZero: true,
             stepSize: maxValueInChart / minimumDivision,
           },
           grid: {
