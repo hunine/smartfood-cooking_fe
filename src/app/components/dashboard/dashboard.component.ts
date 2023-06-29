@@ -96,7 +96,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       labels.push(item.date);
       data.push(item.count);
     });
-    const maxValueInChart = max(data) || 0;
+    const maxValueInChart = max(data) || 5;
     const minimumDivision = 5;
 
     this.chartData = {
