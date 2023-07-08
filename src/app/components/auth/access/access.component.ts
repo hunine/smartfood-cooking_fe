@@ -4,4 +4,8 @@ import { Component } from '@angular/core';
     selector: 'app-access',
     templateUrl: './access.component.html',
 })
-export class AccessComponent { }
+export class AccessComponent {
+  deleteAccessToken() {
+    localStorage.removeItem('accessToken');
+  }
+}

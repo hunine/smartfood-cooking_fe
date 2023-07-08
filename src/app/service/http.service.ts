@@ -4,15 +4,12 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpService {
-  constructor(
-    private http: HttpClient,
-  ) {}
+  constructor(private http: HttpClient) {}
 
   createAuthorizationHeader() {
-    let headers: HttpHeaders = new HttpHeaders().set(
-      'Content-Type',
-      'application/json'
-    );
+    let headers: HttpHeaders = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + localStorage.getItem('accessToken'));
     return headers;
   }
 
@@ -20,12 +17,13 @@ export class HttpService {
     const headers = this.createAuthorizationHeader();
 
     return new Promise((resolve, reject) => {
-      // this.http.get(url, { headers, withCredentials: true })
-      this.http.get(url)
+      this.http
+        .get(url, { headers })
         .toPromise()
-        .then(res => {
+        .then((res) => {
           resolve(res);
-        }).catch(err => {
+        })
+        .catch((err) => {
           reject(err);
         });
     });
@@ -35,12 +33,13 @@ export class HttpService {
     const headers = this.createAuthorizationHeader();
 
     return new Promise((resolve, reject) => {
-      // this.http.post(url, criteria, { headers, withCredentials: true })
-      this.http.post(url, criteria)
+      this.http
+        .post(url, criteria, { headers })
         .toPromise()
-        .then(res => {
+        .then((res) => {
           resolve(res);
-        }).catch(err => {
+        })
+        .catch((err) => {
           reject(err);
         });
     });
@@ -50,28 +49,29 @@ export class HttpService {
     const headers = this.createAuthorizationHeader();
 
     return new Promise((resolve, reject) => {
-      // this.http.patch(url, criteria, { headers, withCredentials: true })
-      this.http.put(url, criteria)
+      this.http
+        .put(url, criteria, { headers })
         .toPromise()
-        .then(res => {
+        .then((res) => {
           resolve(res);
-        }).catch(err => {
+        })
+        .catch((err) => {
           reject();
         });
     });
   }
 
-
   patch(url: string, criteria: any): any {
     const headers = this.createAuthorizationHeader();
 
     return new Promise((resolve, reject) => {
-      // this.http.patch(url, criteria, { headers, withCredentials: true })
-      this.http.patch(url, criteria)
+      this.http
+        .patch(url, criteria, { headers })
         .toPromise()
-        .then(res => {
+        .then((res) => {
           resolve(res);
-        }).catch(err => {
+        })
+        .catch((err) => {
           reject();
         });
     });
@@ -81,12 +81,13 @@ export class HttpService {
     const headers = this.createAuthorizationHeader();
 
     return new Promise((resolve, reject) => {
-      // this.http.delete(url, { headers, withCredentials: true })
-      this.http.delete(url)
+      this.http
+        .delete(url, { headers })
         .toPromise()
-        .then(res => {
+        .then((res) => {
           resolve(res);
-        }).catch(err => {
+        })
+        .catch((err) => {
           reject();
         });
     });
