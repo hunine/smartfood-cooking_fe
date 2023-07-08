@@ -10,6 +10,9 @@ import { CookingHistoryService } from 'src/app/service/cooking-history.service';
 import { IngredientService } from 'src/app/service/ingredient.service';
 import { RecipeService } from 'src/app/service/recipe.service';
 import { UserService } from 'src/app/service/user.service';
+import { CHART } from 'src/app/common/constants/chart';
+import { DateTimeHelper } from 'src/app/common/helpers/datetime.helper';
+import { DATE_FORMAT } from 'src/app/common/constants/datetime';
 
 @Component({
   templateUrl: './dashboard.component.html',
@@ -21,6 +24,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   chartOptions: any;
 
   subscription!: Subscription;
+
+  recipesDataInChart: any;
+
+  rangeDates: Date[] = [];
 
   recipes: Recipe[] = [];
 
@@ -73,7 +80,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   async ngOnInit() {
-    await this.initChart();
+    this.rangeDates = this.getDefaultRangeDates();
+    await this.reloadChartRecipes(this.rangeDates);
     await this.getCountData();
     await this.reloadTableBestRecipes();
   }
@@ -85,19 +93,21 @@ export class DashboardComponent implements OnInit, OnDestroy {
       '--text-color-secondary'
     );
     const surfaceBorder = documentStyle.getPropertyValue('--surface-border');
-    const responseData: any =
-      await this.cookingHistoryService.getRecipeStatistic(
-        '2023-06-22',
-        '2023-06-29'
-      );
+    const responseData: any = this.recipesDataInChart;
     const labels: string[] = [];
     const data: number[] = [];
     responseData.data.forEach((item: any) => {
       labels.push(item.date);
       data.push(item.count);
     });
-    const maxValueInChart = max(data) || 5;
+    const maxValueInChart = max(data) || 1;
     const minimumDivision = 5;
+    const suggestedMax =
+      maxValueInChart < 20
+        ? Math.ceil((maxValueInChart + 1) / 5) * 5
+        : (Math.ceil(
+            (maxValueInChart * CHART.SpaceBetweenMaxValueAndGrid) / 10
+          ) || 1) * 10;
 
     this.chartData = {
       labels,
@@ -120,9 +130,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
         legend: {
           labels: {
             color: textColor,
+            padding: 25,
           },
           position: 'bottom',
-          padding: 50
         },
       },
       scales: {
@@ -137,16 +147,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
           },
         },
         y: {
-          beginAtZero: true,
-          suggestedMax: maxValueInChart,
           ticks: {
             color: textColorSecondary,
-            stepSize: maxValueInChart / minimumDivision,
+            beginAtZero: true,
+            stepSize: suggestedMax / minimumDivision,
           },
           grid: {
             color: surfaceBorder,
             drawBorder: false,
           },
+          beginAtZero: true,
+          suggestedMax,
         },
       },
     };
@@ -167,5 +178,45 @@ export class DashboardComponent implements OnInit, OnDestroy {
   async reloadTableBestRecipes() {
     const returnData: any = await this.recipeService.getRecipes(this.params);
     this.recipes = returnData.data as Recipe[];
+  }
+
+  getDefaultRangeDates() {
+    const today = new Date();
+    const lastWeek = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate() - 7
+    );
+    return [lastWeek, today];
+  }
+
+  async reloadChartRecipes([startDate, endDate]: Date[]) {
+    if (startDate && endDate) {
+      const startDateString = DateTimeHelper.getDateString(
+        startDate,
+        DATE_FORMAT.Date
+      );
+
+      const endDateString = DateTimeHelper.getDateString(
+        endDate,
+        DATE_FORMAT.Date
+      );
+
+      this.recipesDataInChart =
+        await this.cookingHistoryService.getRecipeStatistic(
+          startDateString,
+          endDateString
+        );
+    }
+
+    await this.initChart();
+  }
+
+  // Handle
+  async handleChangeDate(event: any) {
+    const [startDate, endDate] = event;
+    if (startDate && endDate) {
+      await this.reloadChartRecipes(event);
+    }
   }
 }
