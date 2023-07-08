@@ -1,6 +1,7 @@
 import { AppConfig } from './app.config';
 
 export class ManagementUrlConfig {
+  public static authUrl = `${AppConfig.ApiRoot}/api/auth`;
   public static userUrl = `${AppConfig.ApiRoot}/api/users`;
   public static levelUrl = `${AppConfig.ApiRoot}/api/levels`;
   public static recipeUrl = `${AppConfig.ApiRoot}/api/recipes`;

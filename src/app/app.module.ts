@@ -13,10 +13,25 @@ import { HttpService } from './service/http.service';
 import { CustomPrimengModule } from './_shared/primeng.module';
 import { UserService } from './service/user.service';
 import { CookingHistoryService } from './service/cooking-history.service';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('accessToken');
+}
 
 @NgModule({
   declarations: [AppComponent, NotfoundComponent],
-  imports: [AppRoutingModule, AppLayoutModule, CustomPrimengModule],
+  imports: [
+    AppRoutingModule,
+    AppLayoutModule,
+    CustomPrimengModule,
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        allowedDomains: ['localhost:4200/'],
+      },
+    }),
+  ],
   providers: [
     { provide: LocationStrategy, useClass: HashLocationStrategy },
     HttpService,

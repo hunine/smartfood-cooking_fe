@@ -6,6 +6,7 @@ import { IQuery } from 'src/app/common/interfaces/interface';
 import { User } from 'src/app/api/user';
 import { UserService } from 'src/app/service/user.service';
 import { STATUS } from 'src/app/common/constants/status';
+import { Role } from 'src/app/common/enum/role.enum';
 
 @Component({
   templateUrl: './user.component.html',
@@ -25,6 +26,7 @@ export class UserComponent implements OnInit {
     lastName: '',
     email: '',
     deletedAt: '',
+    role: Role.User,
   };
 
   selectedUsers: User[] = [];
@@ -58,6 +60,7 @@ export class UserComponent implements OnInit {
       lastName: '',
       email: '',
       deletedAt: '',
+      role: Role.User,
     };
   }
 
