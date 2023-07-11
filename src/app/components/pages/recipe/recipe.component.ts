@@ -5,6 +5,7 @@ import {
   Step,
   RecipeDto,
   QuantificationDto,
+  IngredientInQuantification,
 } from 'src/app/api/recipe';
 import { MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
@@ -13,7 +14,6 @@ import { LevelService } from 'src/app/service/level.service';
 import { Level } from 'src/app/api/level';
 import { Category } from 'src/app/api/category';
 import { Cuisine } from 'src/app/api/cuisine';
-import { Ingredient } from 'src/app/api/ingredient';
 import { CategoryService } from 'src/app/service/category.service';
 import { CuisineService } from 'src/app/service/cuisine.service';
 import ValidationHelper from 'src/app/helper/validation';
@@ -68,7 +68,7 @@ export class RecipeComponent implements OnInit {
   levels: Level[] = [];
   categories: Category[] = [];
   cuisineArray: Cuisine[] = [];
-  ingredients: Ingredient[] = [];
+  ingredients: IngredientInQuantification[] = [];
 
   // Page steps
   activeIndexStep: number = 0;
@@ -135,9 +135,7 @@ export class RecipeComponent implements OnInit {
     this.levels = (await this.levelService.getLevels({})).data;
     this.categories = (await this.categoryService.getCategories({})).data;
     this.cuisineArray = (await this.cuisineService.getCuisineArray({})).data;
-    this.ingredients = (
-      await this.ingredientService.getIngredients({})
-    ).data.map((ingredient) => ({ id: ingredient.id, name: ingredient.name }));
+    this.ingredients = await this.ingredientService.getAllIngredients();
 
     this.cols = [
       { field: 'id', header: 'Id' },
@@ -161,7 +159,8 @@ export class RecipeComponent implements OnInit {
 
   async editRecipe(recipe: Recipe) {
     if (recipe.id) {
-      this.recipe = await this.recipeService.getRecipeById(recipe.id);
+      const dataReturn = await this.recipeService.getRecipeById(recipe.id);
+      this.recipe = dataReturn;
       this.recipeDialog = true;
     }
   }

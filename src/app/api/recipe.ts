@@ -3,11 +3,16 @@ import { Cuisine } from './cuisine';
 import { Ingredient } from './ingredient';
 import { Level } from './level';
 
+export interface IngredientInQuantification {
+  id?: string;
+  name: string;
+}
+
 export interface Quantification {
   id?: string;
   value: number;
   unit: string;
-  ingredient: Ingredient;
+  ingredient: IngredientInQuantification;
 }
 
 export interface Step {

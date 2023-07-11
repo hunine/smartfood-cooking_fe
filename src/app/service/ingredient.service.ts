@@ -16,6 +16,11 @@ export class IngredientService {
     return this.httpService.get(url);
   }
 
+  async getAllIngredients(): Promise<Ingredient[]> {
+    const url = `${ManagementUrlConfig.ingredientUrl}/all`;
+    return this.httpService.get(url);
+  }
+
   async createIngredient(data: Ingredient) {
     const url = `${ManagementUrlConfig.ingredientUrl}`;
     return this.httpService.post(url, data);

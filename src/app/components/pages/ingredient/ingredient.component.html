@@ -59,8 +59,8 @@
               {{ ingredient.name }}
             </td>
             <td style="width:36%; min-width:10rem;"><span class="p-column-title">Image</span>
-              <img [src]="ingredient.media.length > 0 && ingredient.media[0].url" [alt]="ingredient.name" width="100" height="100"
-                class="shadow-4" />
+              <img [src]="ingredient.media.length > 0 && ingredient.media[0].url" [alt]="ingredient.name" width="100"
+                height="100" class="shadow-4" />
             </td>
             <td style="width:10%; min-width:10rem;">
               <div class="flex">
@@ -86,14 +86,46 @@
             [ngClass]="{'ng-invalid ng-dirty' : submitted && !ingredient.name}" />
           <small class="ng-dirty ng-invalid" *ngIf="submitted && !ingredient.name">Name is required.</small>
         </div>
-        <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*"
-          [maxFileSize]="1000000" [showUploadButton]="false">
+        <div class="field">
+          <label for="kcal">Kcal</label>
+          <p-inputNumber [(ngModel)]="ingredient.kcal" mode="decimal" inputId="ingredient-value" [useGrouping]="false"
+            [minFractionDigits]="0" [maxFractionDigits]="2"
+            [ngClass]="{'ng-invalid ng-dirty' : submitted && ingredient.kcal <= 0}">
+          </p-inputNumber>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !ingredient.kcal">Kcal is required.</small>
+        </div>
+        <div class="field">
+          <label for="carbs">Carbohydrates</label>
+          <p-inputNumber [(ngModel)]="ingredient.carbs" mode="decimal" inputId="ingredient-value" [useGrouping]="false"
+            [minFractionDigits]="0" [maxFractionDigits]="2"
+            [ngClass]="{'ng-invalid ng-dirty' : submitted && ingredient.carbs <= 0}">
+          </p-inputNumber>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !ingredient.carbs">Carbohydrates is required.</small>
+        </div>
+        <div class="field">
+          <label for="protein">Protein</label>
+          <p-inputNumber [(ngModel)]="ingredient.protein" mode="decimal" inputId="ingredient-value"
+            [useGrouping]="false" [minFractionDigits]="0" [maxFractionDigits]="2"
+            [ngClass]="{'ng-invalid ng-dirty' : submitted && ingredient.protein <= 0}">
+          </p-inputNumber>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !ingredient.protein">Protein is required.</small>
+        </div>
+        <div class="field">
+          <label for="fat">Fat</label>
+          <p-inputNumber [(ngModel)]="ingredient.fat" mode="decimal" inputId="ingredient-value" [useGrouping]="false"
+            [minFractionDigits]="0" [maxFractionDigits]="2"
+            [ngClass]="{'ng-invalid ng-dirty' : submitted && ingredient.fat <= 0}">
+          </p-inputNumber>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !ingredient.fat">Fat is required.</small>
+        </div>
+        <!-- <p-fileUpload name="demo[]" url="./upload.php" (onUpload)="onUpload($event)" [multiple]="true" accept="image/*"
+          [maxFileSize]="10000" [showUploadButton]="false">
           <ng-template pTemplate="content">
             <ul *ngIf="uploadedFiles.length">
               <li *ngFor="let file of uploadedFiles">{{file.name}} - {{file.size}} bytes</li>
             </ul>
           </ng-template>
-        </p-fileUpload>
+        </p-fileUpload> -->
       </ng-template>
 
       <ng-template pTemplate="footer">
