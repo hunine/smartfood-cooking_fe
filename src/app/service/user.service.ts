@@ -3,7 +3,7 @@ import { HttpService } from './http.service';
 import { IQuery } from '../common/interfaces/interface';
 import { ManagementUrlConfig } from '../configs/manager-url.config';
 import { paginationHelper } from '../common/helpers';
-import { User, UserDto } from '../api/user';
+import { ChangingPasswordDto, User, UserDto } from '../api/user';
 
 @Injectable()
 export class UserService {
@@ -19,6 +19,23 @@ export class UserService {
   async getUserById(id: string): Promise<User> {
     const url = `${ManagementUrlConfig.userUrl}/${id}`;
     return this.httpService.get(url);
+  }
+
+  async getUserProfile() {
+    const url = `${ManagementUrlConfig.userUrl}/profile`;
+    return this.httpService.get(url);
+  }
+
+  async updateInfo(data: User) {
+    const url = `${ManagementUrlConfig.userUrl}/info`;
+
+    return this.httpService.patch(url, data);
+  }
+
+  async changePassword(data: ChangingPasswordDto) {
+    const url = `${ManagementUrlConfig.authUrl}/change-password`;
+
+    return this.httpService.put(url, data);
   }
 
   async updateUser(data: UserDto, method: string): Promise<User> {

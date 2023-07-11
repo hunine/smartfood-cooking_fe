@@ -81,7 +81,14 @@
   </div>
   <div class="col-12 xl:col-6">
     <div class="card">
-      <h5>Cooked Recipes Overview</h5>
+      <div class="header flex justify-content-between mb-5">
+        <h5>Cooked Recipes Overview</h5>
+        <div class="calendar-container mr-5">
+          <p-calendar [(ngModel)]="rangeDates" selectionMode="range" [showIcon]="true" [readonlyInput]="true"
+            dateFormat="yy-mm-dd" (ngModelChange)="handleChangeDate($event)"
+            [inputStyle]="{'width':'200px', 'text-align': 'center'}"></p-calendar>
+        </div>
+      </div>
       <p-chart type="line" [data]="chartData" [options]="chartOptions"></p-chart>
     </div>
   </div>

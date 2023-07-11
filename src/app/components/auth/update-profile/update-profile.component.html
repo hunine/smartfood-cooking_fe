@@ -1,3 +1,4 @@
+<p-toast></p-toast>
 <div class="grid">
   <div class="col-12">
     <div class="card p-fluid">
@@ -46,10 +47,10 @@
             </div>
             <div class="field">
               <label for="confirm-password">Confirm Password</label>
-              <p-password id="confirm-password" [(ngModel)]="changingPassword.confirmNewPassword"
+              <p-password id="confirm-password" [(ngModel)]="changingPassword.confirmPassword"
                 placeholder="Confirm New Password" [toggleMask]="true" styleClass="mb-5" inputStyleClass="w-full"
-                [ngClass]="{'ng-invalid ng-dirty' : submitted && !changingPassword.confirmNewPassword}"></p-password>
-              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !changingPassword.confirmNewPassword">Name
+                [ngClass]="{'ng-invalid ng-dirty' : submitted && !changingPassword.confirmPassword}"></p-password>
+              <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !changingPassword.confirmPassword">Name
                 is
                 required.</small>
             </div>
@@ -57,7 +58,7 @@
         </div>
       </div>
       <div class="card-footer flex justify-content-end  ">
-        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button" style="width: 100px;"></button>
+        <button pButton pRipple label="Save" (click)="handleSubmit()" icon="pi pi-check" class="p-button" style="width: 100px;"></button>
       </div>
     </div>
   </div>

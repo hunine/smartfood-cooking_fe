@@ -16,7 +16,7 @@ export class AuthService {
     return !this.jwtHelper.isTokenExpired(token);
   }
 
-  public login(data: ILoginAuth) {
+  public async login(data: ILoginAuth) {
     const url = `${ManagementUrlConfig.authUrl}/login`;
     return this.httpService.post(url, data);
   }
