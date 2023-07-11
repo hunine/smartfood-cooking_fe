@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Table } from 'primeng/table';
 import { SORT_ORDER } from 'src/app/common/constants/sort-order';
 import { IQuery } from 'src/app/common/interfaces/interface';
@@ -7,17 +7,24 @@ import { User } from 'src/app/api/user';
 import { UserService } from 'src/app/service/user.service';
 import { STATUS } from 'src/app/common/constants/status';
 import { Role } from 'src/app/common/enum/role.enum';
+import decode from 'jwt-decode';
 
 @Component({
   templateUrl: './user.component.html',
-  providers: [MessageService],
+  providers: [MessageService, ConfirmationService],
 })
 export class UserComponent implements OnInit {
+  roleEnum = Role;
+
   userDialog: boolean = false;
 
-  deleteUserDialog: boolean = false;
+  roleDialog: boolean = false;
+
+  deactivateUserDialog: boolean = false;
 
   deleteUsersDialog: boolean = false;
+
+  currentUser = (decode(localStorage.getItem('accessToken') || '') as any).user;
 
   users: User[] = [];
 
@@ -26,7 +33,7 @@ export class UserComponent implements OnInit {
     lastName: '',
     email: '',
     deletedAt: '',
-    role: Role.User,
+    role: Role.USER,
   };
 
   selectedUsers: User[] = [];
@@ -49,9 +56,16 @@ export class UserComponent implements OnInit {
   totalItems: number = 0;
   currentRecords: number = 0;
 
+  // List
+  roles = [
+    { label: 'User', value: Role.USER },
+    { label: 'Admin', value: 'admin' },
+  ];
+
   constructor(
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private confirmationService: ConfirmationService
   ) {}
 
   private resetUserForm() {
@@ -60,7 +74,7 @@ export class UserComponent implements OnInit {
       lastName: '',
       email: '',
       deletedAt: '',
-      role: Role.User,
+      role: Role.USER,
     };
   }
 
@@ -83,13 +97,18 @@ export class UserComponent implements OnInit {
     this.deleteUsersDialog = true;
   }
 
+  updateUserRole(user: User) {
+    this.user = { ...user };
+    this.roleDialog = true;
+  }
+
   editUser(user: User) {
     this.user = { ...user };
     this.userDialog = true;
   }
 
-  deleteUser(user: User) {
-    this.deleteUserDialog = true;
+  deactiveateUser(user: User) {
+    this.deactivateUserDialog = true;
     this.user = { ...user };
   }
 
@@ -99,7 +118,7 @@ export class UserComponent implements OnInit {
     ) as string[];
 
     this.deleteUsersDialog = false;
-    selectedUserIds && (await this.userService.deleteUsers(selectedUserIds));
+    // selectedUserIds && (await this.userService.deleteUsers(selectedUserIds));
     await this.reloadTable();
 
     this.messageService.add({
@@ -111,15 +130,15 @@ export class UserComponent implements OnInit {
     this.selectedUsers = [];
   }
 
-  async confirmDelete() {
-    this.deleteUserDialog = false;
-    this.user.id && (await this.userService.deleteUser(this.user.id));
+  async confirmDeactivate() {
+    this.deactivateUserDialog = false;
+    // this.user.id && (await this.userService.deactivateUser(this.user.id));
     await this.reloadTable();
 
     this.messageService.add({
       severity: 'success',
       summary: 'Successful',
-      detail: 'User Deleted',
+      detail: 'User Deactivated',
       life: 3000,
     });
     this.resetUserForm();
@@ -127,15 +146,18 @@ export class UserComponent implements OnInit {
 
   hideDialog() {
     this.userDialog = false;
+    this.roleDialog = false;
     this.submitted = false;
   }
 
   async saveUser() {
     this.submitted = true;
+    this.user.firstName = this.user.firstName?.trim();
+    this.user.lastName = this.user.lastName?.trim();
 
-    if (this.user.firstName?.trim()) {
+    if (this.user.firstName && this.user.lastName) {
       if (this.user.id) {
-        await this.userService.updateUser(this.user, 'put');
+        await this.userService.updateInfo(this.user);
         await this.reloadTable();
 
         this.messageService.add({
@@ -171,6 +193,20 @@ export class UserComponent implements OnInit {
     });
   }
 
+  // Validate
+
+  validateSuperAdmin(user: User) {
+    return user.role === Role.SUPER_ADMIN;
+  }
+
+  validateCurrentUser(user: User) {
+    return user.id === this.currentUser.id;
+  }
+
+  validateAction(user: User) {
+    return this.validateSuperAdmin(user) || this.validateCurrentUser(user);
+  }
+
   // Handle
   handleSearchInput(event: any) {
     this.searchInput = event.target.value;
@@ -200,5 +236,66 @@ export class UserComponent implements OnInit {
     }
 
     await this.reloadTable();
+  }
+
+  async handleUpdateRole() {
+    console.log(this.user);
+
+    this.submitted = true;
+
+    if (this.user.id && this.user.role) {
+      const dataReturn = await this.userService.updateRole(this.user);
+
+      if (!dataReturn.success) {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'User role update failed',
+          life: 3000,
+        });
+
+        this.roleDialog = false;
+        this.resetUserForm();
+
+        return;
+      }
+
+      await this.reloadTable();
+
+      this.messageService.add({
+        severity: 'success',
+        summary: 'Successful',
+        detail: dataReturn.message,
+        life: 3000,
+      });
+
+      this.users = [...this.users];
+      this.roleDialog = false;
+      this.resetUserForm();
+    }
+  }
+
+  handleDeactiveUser(user: User) {
+    this.user = { ...user };
+    this.confirmationService.confirm({});
+    this.confirmationService.confirm({
+      key: 'confirm2',
+      message: `Are you sure that you want to deactive ${this.user.email}?`,
+      icon: 'pi pi-exclamation-triangle',
+      accept: () => {
+        this.messageService.add({
+          severity: 'info',
+          summary: 'Confirmed',
+          detail: 'You have accepted',
+        });
+      },
+      reject: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Rejected',
+          detail: 'You have rejected',
+        });
+      },
+    });
   }
 }

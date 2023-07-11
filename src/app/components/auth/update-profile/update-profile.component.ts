@@ -15,7 +15,7 @@ export class UpdateProfileComponent implements OnInit {
     email: 'example@smartfood.com',
     firstName: '',
     lastName: '',
-    role: Role.Admin,
+    role: Role.ADMIN,
   };
 
   changingPassword: ChangingPasswordDto = {
@@ -98,7 +98,7 @@ export class UpdateProfileComponent implements OnInit {
     }
 
     const isChangingPasswordSuccess = await this.handleChangePassword();
-    const updateUserInfo = await this.userService.updateInfo(this.user);
+    const updateUserInfo = await this.userService.updateMyInfo(this.user);
 
     this.clearPassword();
 
