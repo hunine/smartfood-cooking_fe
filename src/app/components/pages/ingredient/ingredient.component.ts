@@ -22,6 +22,10 @@ export class IngredientComponent implements OnInit {
 
   ingredient: Ingredient = {
     name: '',
+    kcal: 0,
+    carbs: 0,
+    protein: 0,
+    fat: 0,
   };
 
   selectedIngredients: Ingredient[] = [];
@@ -58,6 +62,10 @@ export class IngredientComponent implements OnInit {
   private resetIngredientForm() {
     this.ingredient = {
       name: '',
+      kcal: 0,
+      carbs: 0,
+      protein: 0,
+      fat: 0,
     };
   }
 
@@ -131,8 +139,18 @@ export class IngredientComponent implements OnInit {
 
   async saveIngredient() {
     this.submitted = true;
+    this.ingredient.kcal = Number(this.ingredient.kcal);
+    this.ingredient.carbs = Number(this.ingredient.carbs);
+    this.ingredient.protein = Number(this.ingredient.protein);
+    this.ingredient.fat = Number(this.ingredient.fat);
 
-    if (this.ingredient.name?.trim()) {
+    if (
+      this.ingredient.name?.trim() &&
+      this.ingredient.kcal > 0 &&
+      this.ingredient.carbs > 0 &&
+      this.ingredient.protein > 0 &&
+      this.ingredient.fat > 0
+    ) {
       if (this.ingredient.id) {
         await this.ingredientService.updateIngredient(this.ingredient);
         await this.reloadTable();

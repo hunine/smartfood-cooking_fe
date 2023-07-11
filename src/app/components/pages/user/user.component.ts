@@ -239,8 +239,6 @@ export class UserComponent implements OnInit {
   }
 
   async handleUpdateRole() {
-    console.log(this.user);
-
     this.submitted = true;
 
     if (this.user.id && this.user.role) {

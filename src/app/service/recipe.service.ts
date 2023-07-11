@@ -16,7 +16,7 @@ export class RecipeService {
     return this.httpService.get(url);
   }
 
-  async getRecipeById(id: string): Promise<Recipe> {
+  async getRecipeById(id: string) {
     const url = `${ManagementUrlConfig.recipeUrl}/${id}`;
     return this.httpService.get(url);
   }

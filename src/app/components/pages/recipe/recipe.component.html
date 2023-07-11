@@ -117,46 +117,25 @@
           </div>
           <div class="field">
             <label for="level">Level</label>
-            <p-dropdown [options]="levels" [(ngModel)]="recipe.level" optionLabel="name" [filter]="true" filterBy="name"
-              placeholder="Select a Level" appendTo="body"
-              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.level.name === ''}">
-              <ng-template pTemplate="selectedItem">
-                <div class="flex align-items-center gap-2" *ngIf="recipe.level">{{ recipe.level.name }}</div>
-              </ng-template>
-              <ng-template let-level pTemplate="item">
-                <div class="flex align-items-center gap-2">{{ level.name }}</div>
-              </ng-template>
-            </p-dropdown>
+            <p-dropdown [options]="levels" [(ngModel)]="recipe.level.id" optionLabel="name" optionValue="id"
+              appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
+              placeholder="Select a Level"></p-dropdown>
             <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.level.name === ''">Level is
               required.</small>
           </div>
           <div class="field">
             <label for="category">Category</label>
-            <p-dropdown [options]="categories" [(ngModel)]="recipe.category" optionLabel="name" [filter]="true"
-              filterBy="name" placeholder="Select a Category" appendTo="body"
-              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.category.name === ''}">
-              <ng-template pTemplate="selectedItem">
-                <div class="flex align-items-center gap-2" *ngIf="recipe.category">{{ recipe.category.name }}</div>
-              </ng-template>
-              <ng-template let-category pTemplate="item">
-                <div class="flex align-items-center gap-2">{{ category.name }}</div>
-              </ng-template>
-            </p-dropdown>
+            <p-dropdown [options]="categories" [(ngModel)]="recipe.category.id" optionLabel="name" optionValue="id"
+              appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
+              placeholder="Select a Category"></p-dropdown>
             <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.category.name === ''">Category is
               required.</small>
           </div>
           <div class="field">
             <label for="Cuisine">Cuisine</label>
-            <p-dropdown [options]="cuisineArray" [(ngModel)]="recipe.cuisine" optionLabel="name" [filter]="true"
-              filterBy="name" placeholder="Select a Cuisine" appendTo="body"
-              [ngClass]="{'ng-invalid ng-dirty' : submitted && recipe.cuisine.name === ''}">
-              <ng-template pTemplate="selectedItem">
-                <div class="flex align-items-center gap-2" *ngIf="recipe.cuisine">{{ recipe.cuisine.name }}</div>
-              </ng-template>
-              <ng-template let-cuisine pTemplate="item">
-                <div class="flex align-items-center gap-2">{{ cuisine.name }}</div>
-              </ng-template>
-            </p-dropdown>
+            <p-dropdown [options]="cuisineArray" [(ngModel)]="recipe.cuisine.id" optionLabel="name" optionValue="id"
+              appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
+              placeholder="Select a Cuisine"></p-dropdown>
             <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.cuisine.name === ''">Cuisine is
               required.</small>
           </div>
@@ -166,22 +145,10 @@
             <div class="p-formgrid grid">
               <div class="field col md:col-7">
                 <label for="ingredient-name">Ingredient name</label>
-                <p-dropdown id="ingredient-name" [options]="ingredients" [(ngModel)]="item.ingredient"
-                  optionLabel="name" [filter]="true" filterBy="name" placeholder="Select a Ingredient" appendTo="body"
-                  [ngClass]="{'ng-invalid ng-dirty' : submitted && item.ingredient.name === ''}">
-                  <ng-template pTemplate="selectedItem">
-                    <div class="flex align-items-center gap-2" *ngIf="item.ingredient.name">{{ item.ingredient.name }}
-                    </div>
-                  </ng-template>
-                  <ng-template let-ingredient pTemplate="item">
-                    <div class="flex align-items-center gap-2">{{ ingredient.name }}</div>
-                  </ng-template>
-                </p-dropdown>
-                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !item.ingredient.name">Ingredient name is
-                  required.</small>
-                <small class="p-error ng-dirty ng-invalid"
-                  *ngIf="item.ingredient.id && isDuplicatedIngredient().includes(item.ingredient.id)">Ingredient is
-                  duplicated</small>
+
+                <p-dropdown [options]="ingredients" [(ngModel)]="item.ingredient.id" optionLabel="name" optionValue="id"
+                  appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
+                  placeholder="Select an Ingredient" [virtualScroll]="true" [itemSize]="30"></p-dropdown>
               </div>
               <div class="field col md:col-2">
                 <label for="ingredient-value">Value</label>
