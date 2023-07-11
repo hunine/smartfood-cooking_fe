@@ -135,7 +135,13 @@ export class RecipeComponent implements OnInit {
     this.levels = (await this.levelService.getLevels({})).data;
     this.categories = (await this.categoryService.getCategories({})).data;
     this.cuisineArray = (await this.cuisineService.getCuisineArray({})).data;
-    this.ingredients = await this.ingredientService.getAllIngredients();
+    const dataReturn = await this.ingredientService.getAllIngredients();
+    this.ingredients = Object.values(dataReturn).map((ingredient) => {
+      return {
+        id: ingredient.id,
+        name: ingredient.name,
+      };
+    });
 
     this.cols = [
       { field: 'id', header: 'Id' },
