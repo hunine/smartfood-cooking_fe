@@ -26,10 +26,22 @@ export class UserService {
     return this.httpService.get(url);
   }
 
-  async updateInfo(data: User) {
+  async updateMyInfo(data: User) {
     const url = `${ManagementUrlConfig.userUrl}/info`;
 
     return this.httpService.patch(url, data);
+  }
+
+  async updateInfo(data: User) {
+    const url = `${ManagementUrlConfig.userUrl}/info/${data.id}`;
+
+    return this.httpService.patch(url, data);
+  }
+
+  async updateRole(data: User) {
+    const url = `${ManagementUrlConfig.userUrl}/up-role/${data.id}`;
+
+    return this.httpService.patch(url, { role: data.role });
   }
 
   async changePassword(data: ChangingPasswordDto) {
@@ -48,16 +60,16 @@ export class UserService {
     return this.httpService.patch(url, data);
   }
 
-  async deleteUser(id: string) {
-    const url = `${ManagementUrlConfig.userUrl}/${id}`;
-    return this.httpService.delete(url);
-  }
+  // async deactivateUser(id: string) {
+  //   const url = `${ManagementUrlConfig.userUrl}/${id}`;
+  //   return this.httpService.delete(url);
+  // }
 
-  async deleteUsers(ids: string[]) {
-    const query = '?ids=' + ids.join('&ids=');
-    const url = `${ManagementUrlConfig.userUrl}${query}`;
-    return this.httpService.delete(url);
-  }
+  // async deleteUsers(ids: string[]) {
+  //   const query = '?ids=' + ids.join('&ids=');
+  //   const url = `${ManagementUrlConfig.userUrl}${query}`;
+  //   return this.httpService.delete(url);
+  // }
 
   async countUsers() {
     const url = `${ManagementUrlConfig.userUrl}/count`;

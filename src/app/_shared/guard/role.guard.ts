@@ -18,7 +18,7 @@ export class RoleGuard implements CanActivate {
       this.router.navigate(['/auth/login']);
       return false;
     } else {
-      if (tokenPayload.user.role !== Role.Admin) {
+      if (tokenPayload.user.role !== Role.ADMIN && tokenPayload.user.role !== Role.SUPER_ADMIN) {
         this.router.navigate(['/auth/access']);
         return false;
       }

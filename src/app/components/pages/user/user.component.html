@@ -5,10 +5,10 @@
       <p-toolbar styleClass="mb-4">
         <ng-template pTemplate="left">
           <div class="my-2">
-            <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
-              (click)="openNew()"></button>
-            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger"
-              (click)="deleteSelectedUsers()" [disabled]="!selectedUsers || !selectedUsers.length"></button>
+            <!-- <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success mr-2"
+              (click)="openNew()"></button> -->
+            <button pButton pRipple label="Deactivate" icon="pi pi-trash" class="p-button-danger"
+              [disabled]="!selectedUsers || !selectedUsers.length"></button>
           </div>
         </ng-template>
 
@@ -49,7 +49,7 @@
         <ng-template pTemplate="body" let-user>
           <tr>
             <td>
-              <p-tableCheckbox [value]="user"></p-tableCheckbox>
+              <p-tableCheckbox [value]="user" *ngIf="!validateAction(user)"></p-tableCheckbox>
             </td>
             <td style="width:14%; min-width:10rem;"><span class="p-column-title">Id</span>
               {{ user.id }}
@@ -58,18 +58,20 @@
               <span class="p-column-title">Name</span>
               {{ user.firstName }} {{ user.lastName }}
             </td>
-            <td>{{ user.role }}</td>
+            <td>{{ user.role.toUpperCase() }}</td>
             <td style="width:14%; min-width: 10rem;">
               <span [class]="'user-badge status-' + (user.status)">{{ user.status }}</span>
             </td>
             <td style="width:10%; min-width:10rem;">
-              <div class="flex">
+              <div class="flex" *ngIf="!validateAction(user)">
+                <button pButton pRipple icon="pi pi-shield" class="p-button-rounded p-button-third mr-2"
+                  tooltipPosition="top" pTooltip="Update role" (click)="updateUserRole(user)"></button>
                 <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-secondary mr-2"
                   tooltipPosition="top" pTooltip="Edit" (click)="editUser(user)"></button>
-                <button *ngIf="!user.deletedAt" pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-danger"
-                  tooltipPosition="top" pTooltip="Deactivate"></button>
-                <button *ngIf="user.deletedAt" pButton pRipple icon="pi pi-check" class="p-button-rounded p-button-success"
-                  tooltipPosition="top" pTooltip="Activate"></button>
+                <button *ngIf="!user.deletedAt" pButton pRipple icon="pi pi-times"
+                  class="p-button-rounded p-button-danger" tooltipPosition="top" pTooltip="Deactivate"></button>
+                <button *ngIf="user.deletedAt" pButton pRipple icon="pi pi-check"
+                  class="p-button-rounded p-button-success" tooltipPosition="top" pTooltip="Activate"></button>
               </div>
             </td>
           </tr>
@@ -82,10 +84,20 @@
     <p-dialog [(visible)]="userDialog" [style]="{width: '450px'}" header="User Details" [modal]="true" class="p-fluid">
       <ng-template pTemplate="content">
         <div class="field">
-          <label for="name">Name</label>
-          <input type="text" pInputText id="name" [(ngModel)]="user.firstName" required autofocus
+          <label for="first-name">First name</label>
+          <input type="text" pInputText id="first-name" [(ngModel)]="user.firstName" required autofocus
             [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.firstName}" />
-          <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.firstName">Name is required.</small>
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.firstName">First name is required.</small>
+        </div>
+        <div class="field">
+          <label for="last-name">Last name</label>
+          <input type="text" pInputText id="last-name" [(ngModel)]="user.lastName" required autofocus
+            [ngClass]="{'ng-invalid ng-dirty' : submitted && !user.lastName}" />
+          <small class="ng-dirty ng-invalid" *ngIf="submitted && !user.lastName">Last name is required.</small>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="text" pInputText id="email" [(ngModel)]="user.email" required autofocus disabled="true" />
         </div>
       </ng-template>
 
@@ -95,15 +107,34 @@
       </ng-template>
     </p-dialog>
 
-    <p-dialog [(visible)]="deleteUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
+    <p-dialog [(visible)]="roleDialog" [style]="{width: '450px'}" header="Role Details" [modal]="true" class="p-fluid">
+      <ng-template pTemplate="content">
+        <div class="field">
+          <label for="role">Role</label>
+          <p-dropdown [options]="roles" [(ngModel)]="user.role" optionLabel="label" optionValue="value" appendTo="body"
+            [ngClass]="{'ng-invalid ng-dirty' : submitted}"></p-dropdown>
+          <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && !user.role">Role is
+            required.</small>
+        </div>
+      </ng-template>
+
+      <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text"
+          (click)="handleUpdateRole()"></button>
+      </ng-template>
+    </p-dialog>
+
+    <p-dialog [(visible)]="deactivateUserDialog" header="Confirm" [modal]="true" [style]="{width:'450px'}">
       <div class="flex align-items-center justify-content-center">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem"></i>
-        <span *ngIf="user">Are you sure you want to delete <b>{{user.firstName}}</b>?</span>
+        <span *ngIf="user">Are you sure you want to deactivate <b>{{user.firstName}} {{user.lastName}}</b>?</span>
       </div>
       <ng-template pTemplate="footer">
         <button pButton pRipple icon="pi pi-times" class="p-button-text" label="No"
-          (click)="deleteUserDialog = false"></button>
-        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes" (click)="confirmDelete()"></button>
+          (click)="deactivateUserDialog = false"></button>
+        <button pButton pRipple icon="pi pi-check" class="p-button-text" label="Yes"
+          (click)="confirmDeactivate()"></button>
       </ng-template>
     </p-dialog>
 
