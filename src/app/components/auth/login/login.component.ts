@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 import { LayoutService } from 'src/app/layout/service/app.layout.service';
 import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
   selector: 'app-login',
+  providers: [MessageService],
   templateUrl: './login.component.html',
   styles: [
     `
@@ -24,15 +26,19 @@ export class LoginComponent {
 
   password!: string;
 
+  submitted = false;
+
   constructor(
     public layoutService: LayoutService,
+    private messageService: MessageService,
     private authService: AuthService,
     private router: Router
   ) {}
 
   // Handle
-  async handlSubmit() {
+  async handleSubmit() {
     if (!this.email || !this.password) {
+      this.submitted = true;
       return;
     }
 
@@ -40,6 +46,18 @@ export class LoginComponent {
       email: this.email,
       password: this.password,
     });
+
+    if (!returnData.success) {
+
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: returnData.message,
+        life: 3000,
+      });
+
+      return;
+    }
 
     localStorage.setItem('accessToken', returnData.data.accessToken);
 

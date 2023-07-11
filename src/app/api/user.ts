@@ -7,7 +7,7 @@ export interface User {
   lastName: string;
   email: string;
   role: Role;
-  deletedAt: string;
+  deletedAt?: string;
 }
 
 export interface UserDto {
@@ -26,7 +26,7 @@ export interface UserDto {
 export interface ChangingPasswordDto {
   currentPassword: string;
   newPassword: string;
-  confirmNewPassword: string;
+  confirmPassword: string;
 }
 
 export interface CountUsers {

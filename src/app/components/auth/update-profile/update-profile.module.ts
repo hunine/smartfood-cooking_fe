@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CustomPrimengModule } from 'src/app/_shared/primeng.module';
 import { UpdateProfilesRoutingModule } from './update-profile-routing.module';
 import { UpdateProfileComponent } from './update-profile.component';
+import { MessagesModule } from 'primeng/messages';
 
 @NgModule({
   imports: [

@@ -12,9 +12,7 @@ export class RoleGuard implements CanActivate {
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const token = localStorage.getItem('accessToken') || '';
-    const tokenPayload: {
-      user: UserDto;
-    } = decode(token);
+    const tokenPayload: { user: UserDto } = decode(token);
 
     if (!this.authService.isAuthenticated()) {
       this.router.navigate(['/auth/login']);

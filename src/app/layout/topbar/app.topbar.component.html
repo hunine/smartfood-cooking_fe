@@ -15,10 +15,13 @@
 
   <div #topbarmenu class="layout-topbar-menu"
     [ngClass]="{'layout-topbar-menu-mobile-active': layoutService.state.profileSidebarVisible}">
-    <p-menu #menu [popup]="true" [model]="menuItems" [style]="{minWidth: '200px'}"></p-menu>
-    <button class="p-link layout-topbar-button" (click)="menu.toggle($event)">
+    <button class="p-link layout-topbar-button" routerLink="/auth/update-profile">
       <i class="pi pi-user"></i>
       <span>Profile</span>
+    </button>
+    <button class="p-link layout-topbar-button" (click)="handleLogout()">
+      <i class="pi pi-fw pi-sign-out"></i>
+      <span>Logout</span>
     </button>
   </div>
 </div>
