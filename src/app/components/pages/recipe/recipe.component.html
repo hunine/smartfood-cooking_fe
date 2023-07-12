@@ -120,7 +120,7 @@
             <p-dropdown [options]="levels" [(ngModel)]="recipe.level.id" optionLabel="name" optionValue="id"
               appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
               placeholder="Select a Level"></p-dropdown>
-            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.level.name === ''">Level is
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.level.id === ''">Level is
               required.</small>
           </div>
           <div class="field">
@@ -128,7 +128,7 @@
             <p-dropdown [options]="categories" [(ngModel)]="recipe.category.id" optionLabel="name" optionValue="id"
               appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
               placeholder="Select a Category"></p-dropdown>
-            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.category.name === ''">Category is
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.category.id === ''">Category is
               required.</small>
           </div>
           <div class="field">
@@ -136,7 +136,7 @@
             <p-dropdown [options]="cuisineArray" [(ngModel)]="recipe.cuisine.id" optionLabel="name" optionValue="id"
               appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
               placeholder="Select a Cuisine"></p-dropdown>
-            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.cuisine.name === ''">Cuisine is
+            <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && recipe.cuisine.id === ''">Cuisine is
               required.</small>
           </div>
         </div>
@@ -145,10 +145,11 @@
             <div class="p-formgrid grid">
               <div class="field col md:col-7">
                 <label for="ingredient-name">Ingredient name</label>
-
                 <p-dropdown [options]="ingredients" [(ngModel)]="item.ingredient.id" optionLabel="name" optionValue="id"
                   appendTo="body" [ngClass]="{'ng-invalid ng-dirty' : submitted}" [filter]="true" filterBy="name"
                   placeholder="Select an Ingredient" [virtualScroll]="true" [itemSize]="30"></p-dropdown>
+                <small class="p-error ng-dirty ng-invalid" *ngIf="submitted && item.ingredient.id === ''">Ingredient is
+                  required.</small>
               </div>
               <div class="field col md:col-2">
                 <label for="ingredient-value">Value</label>

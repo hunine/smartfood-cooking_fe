@@ -132,10 +132,35 @@ export class RecipeComponent implements OnInit {
 
   async ngOnInit() {
     await this.reloadTable();
-    this.levels = (await this.levelService.getLevels({})).data;
-    this.categories = (await this.categoryService.getCategories({})).data;
-    this.cuisineArray = (await this.cuisineService.getCuisineArray({})).data;
+    const levelsDataReturn = (await this.levelService.getLevels({})).data;
+    const categoriesDataReturn = (await this.categoryService.getCategories({}))
+      .data;
+    const cuisineArrayDataReturn = (
+      await this.cuisineService.getCuisineArray({})
+    ).data;
     const dataReturn = await this.ingredientService.getAllIngredients();
+
+    this.levels = levelsDataReturn.map((level) => {
+      return {
+        id: level.id,
+        name: level.name,
+      };
+    });
+
+    this.categories = categoriesDataReturn.map((category) => {
+      return {
+        id: category.id,
+        name: category.name,
+      };
+    });
+
+    this.cuisineArray = cuisineArrayDataReturn.map((cuisine) => {
+      return {
+        id: cuisine.id,
+        name: cuisine.name,
+      };
+    });
+
     this.ingredients = Object.values(dataReturn).map((ingredient) => {
       return {
         id: ingredient.id,
@@ -224,9 +249,9 @@ export class RecipeComponent implements OnInit {
       !this.recipe.category.id ||
       !this.recipe.cuisine.id ||
       !ValidationHelper.isInputStringValid(this.recipe.name, true) ||
-      !ValidationHelper.isInputStringValid(this.recipe.level.name, true) ||
-      !ValidationHelper.isInputStringValid(this.recipe.category.name, true) ||
-      !ValidationHelper.isInputStringValid(this.recipe.cuisine.name, true) ||
+      // !ValidationHelper.isInputStringValid(this.recipe.level.name, true) ||
+      // !ValidationHelper.isInputStringValid(this.recipe.category.name, true) ||
+      // !ValidationHelper.isInputStringValid(this.recipe.cuisine.name, true) ||
       !this.isQuantificationValid() ||
       !this.isRecipeStepValid() ||
       this.isDuplicatedIngredient().length > 0
